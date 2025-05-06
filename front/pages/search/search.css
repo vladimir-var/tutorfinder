@@ -1,0 +1,121 @@
+/* Search Page Styles */
+:root {
+    --primary: #2C4A52;      /* Сине-зеленый */
+    --secondary: #537072;    /* Фарватер */
+    --accent: #8E9B97;       /* Дымка */
+    --light: #F4EBDB;       /* Смог */
+    --dark: #2C4A52;
+    --primary-light: #3a5f69;
+    --primary-dark: #1e353b;
+    --secondary-light: #688789;
+    --secondary-dark: #3e5456;
+    --accent-light: #a7b1ae;
+    --accent-dark: #758580;
+}
+
+/* Фильтры */
+.filters-card {
+    background-color: white;
+    border: none;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+}
+
+.filters-header {
+    background-color: var(--primary);
+    color: var(--light);
+    padding: 1rem;
+    border-radius: 0.5rem 0.5rem 0 0;
+}
+
+/* Чекбоксы и радио кнопки */
+.form-check-input:checked {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+/* Слайдеры цен */
+.price-slider {
+    accent-color: var(--primary);
+}
+
+/* Рейтинг */
+.rating-filter .form-check-label i {
+    color: var(--secondary);
+}
+
+/* Карточки репетиторов */
+.tutor-card {
+    border: none;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+    transition: transform 0.3s ease;
+}
+
+.tutor-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
+}
+
+.tutor-card .card-img-top {
+    height: 200px;
+    object-fit: cover;
+    border-radius: 0.5rem 0.5rem 0 0;
+}
+
+/* Сортировка */
+.sort-dropdown .dropdown-item:hover {
+    background-color: var(--light);
+    color: var(--primary);
+}
+
+.sort-dropdown .dropdown-item.active {
+    background-color: var(--primary);
+    color: var(--light);
+}
+
+/* Пагинация */
+.pagination .page-link {
+    color: var(--primary);
+    border-color: var(--accent-light);
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: var(--light);
+}
+
+.pagination .page-link:hover {
+    background-color: var(--light);
+    color: var(--primary-dark);
+}
+
+/* Кнопки фильтров */
+.filter-btn {
+    background-color: var(--light);
+    color: var(--primary);
+    border: 1px solid var(--accent);
+    transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+    background-color: var(--primary);
+    color: var(--light);
+}
+
+.filter-btn.active {
+    background-color: var(--primary);
+    color: var(--light);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .filters-sidebar {
+        margin-bottom: 2rem;
+    }
+    
+    .tutor-card {
+        margin-bottom: 1rem;
+    }
+}

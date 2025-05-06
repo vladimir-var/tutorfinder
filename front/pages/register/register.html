@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Реєстрація - TutorConnect</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="../main/main.css" rel="stylesheet">
+    <link href="register.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary py-3">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="../main/index.html">
+                <i class="fas fa-graduation-cap me-2"></i>TutorConnect
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../main/index.html">Головна</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../search/search.html">Знайти Репетитора</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="register.html">Стати Репетитором</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-primary text-white py-3">
+                        <h4 class="mb-0"><i class="fas fa-user-plus me-2"></i>Реєстрація Репетитора</h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <form id="registerForm">
+                            <!-- Personal Information -->
+                            <h5 class="fw-bold mb-3">Особиста Інформація</h5>
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <label for="firstName" class="form-label">Ім'я</label>
+                                    <input type="text" class="form-control" id="firstName" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="lastName" class="form-label">Прізвище</label>
+                                    <input type="text" class="form-control" id="lastName" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="email" class="form-label">Електронна пошта</label>
+                                    <input type="email" class="form-control" id="email" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="phone" class="form-label">Телефон</label>
+                                    <input type="tel" class="form-control" id="phone" required>
+                                </div>
+                                <div class="col-12">
+                                    <label for="location" class="form-label">Місцезнаходження</label>
+                                    <input type="text" class="form-control" id="location" required>
+                                </div>
+                            </div>
+
+                            <!-- Professional Information -->
+                            <h5 class="fw-bold mb-3">Професійна Інформація</h5>
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <label for="education" class="form-label">Освіта</label>
+                                    <input type="text" class="form-control" id="education" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="experience" class="form-label">Досвід (роки)</label>
+                                    <input type="number" class="form-control" id="experience" min="0" required>
+                                </div>
+                                <div class="col-12">
+                                    <label for="subjects" class="form-label">Предмети</label>
+                                    <select class="form-select" id="subjects" multiple required>
+                                        <option value="math">Математика</option>
+                                        <option value="physics">Фізика</option>
+                                        <option value="chemistry">Хімія</option>
+                                        <option value="biology">Біологія</option>
+                                        <option value="english">Англійська мова</option>
+                                        <option value="ukrainian">Українська мова</option>
+                                        <option value="history">Історія</option>
+                                        <option value="geography">Географія</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label for="levels" class="form-label">Рівні</label>
+                                    <select class="form-select" id="levels" multiple required>
+                                        <option value="elementary">Початкова школа</option>
+                                        <option value="middle">Середня школа</option>
+                                        <option value="high">Старша школа</option>
+                                        <option value="university">Університет</option>
+                                        <option value="adult">Дорослі</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Teaching Details -->
+                            <h5 class="fw-bold mb-3">Деталі Викладання</h5>
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <label for="price" class="form-label">Ціна за годину (грн)</label>
+                                    <input type="number" class="form-control" id="price" min="0" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="availability" class="form-label">Доступність</label>
+                                    <select class="form-select" id="availability" required>
+                                        <option value="online">Онлайн</option>
+                                        <option value="offline">Очно</option>
+                                        <option value="both">Онлайн та очно</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label for="description" class="form-label">Опис</label>
+                                    <textarea class="form-control" id="description" rows="4" required></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Account Security -->
+                            <h5 class="fw-bold mb-3">Безпека Облікового Запису</h5>
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <label for="password" class="form-label">Пароль</label>
+                                    <input type="password" class="form-control" id="password" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="confirmPassword" class="form-label">Підтвердіть пароль</label>
+                                    <input type="password" class="form-control" id="confirmPassword" required>
+                                </div>
+                            </div>
+
+                            <div class="form-check mb-4">
+                                <input class="form-check-input" type="checkbox" id="terms" required>
+                                <label class="form-check-label" for="terms">
+                                    Я погоджуюся з <a href="#" class="text-primary">Умовами використання</a> та <a href="#" class="text-primary">Політикою конфіденційності</a>
+                                </label>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100 py-3">
+                                <i class="fas fa-user-plus me-2"></i>Зареєструватися
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-5">
+        <div class="container py-4">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <h4 class="fw-bold mb-4">
+                        <i class="fas fa-graduation-cap me-2"></i>TutorConnect
+                    </h4>
+                    <p>З'єднуємо студентів з найкращими репетиторами з 2023 року. Наша місія - зробити якісну освіту доступною для всіх.</p>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <h5 class="fw-bold mb-4">Швидкі Посилання</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="../main/index.html" class="text-white text-decoration-none">Головна</a></li>
+                        <li class="mb-2"><a href="../search/search.html" class="text-white text-decoration-none">Знайти Репетитора</a></li>
+                        <li class="mb-2"><a href="register.html" class="text-white text-decoration-none">Стати Репетитором</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-4">
+                    <h5 class="fw-bold mb-4">Контакти</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="fas fa-envelope me-2"></i> contact@tutorconnect.com</li>
+                        <li class="mb-2"><i class="fas fa-phone me-2"></i> (123) 456-7890</li>
+                        <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i> 123 Education St, Learnville</li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-4">
+                    <h5 class="fw-bold mb-4">Слідкуйте за Нами</h5>
+                    <div class="social-links">
+                        <a href="#" class="text-white me-3"><i class="fab fa-facebook-f fa-lg"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-twitter fa-lg"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-instagram fa-lg"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-linkedin-in fa-lg"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center">
+                <p class="mb-0">&copy; 2023 TutorConnect. Всі права захищені.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="register.js"></script>
+</body>
+</html> 

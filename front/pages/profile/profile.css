@@ -1,0 +1,139 @@
+/* Profile Page Styles */
+:root {
+    --primary: #2C4A52;      /* Сине-зеленый */
+    --secondary: #537072;    /* Фарватер */
+    --accent: #8E9B97;       /* Дымка */
+    --light: #F4EBDB;       /* Смог */
+    --dark: #2C4A52;
+    --primary-light: #3a5f69;
+    --primary-dark: #1e353b;
+    --secondary-light: #688789;
+    --secondary-dark: #3e5456;
+    --accent-light: #a7b1ae;
+    --accent-dark: #758580;
+}
+
+/* Профиль */
+.profile-sidebar {
+    margin-bottom: 2rem;
+}
+
+.profile-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--light);
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
+}
+
+.profile-info {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+}
+
+.profile-header {
+    background-color: var(--primary);
+    color: var(--light);
+    border-radius: 0.5rem 0.5rem 0 0;
+    padding: 1.5rem;
+}
+
+/* Информационные карточки */
+.info-card {
+    background-color: white;
+    border: none;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+    margin-bottom: 1.5rem;
+    transition: transform 0.3s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
+}
+
+/* Предметы */
+.subject-item {
+    margin-bottom: 1.5rem;
+}
+
+.progress {
+    height: 0.5rem;
+    background-color: var(--light);
+}
+
+.progress-bar {
+    background-color: var(--primary);
+}
+
+/* Отзывы */
+.review-item {
+    border-bottom: 1px solid var(--accent-light);
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.review-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.rating i {
+    color: var(--secondary);
+}
+
+/* Кнопки действий */
+.action-buttons .btn {
+    margin-bottom: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.action-buttons .btn-primary {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.action-buttons .btn-primary:hover {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+.action-buttons .btn-outline-primary {
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.action-buttons .btn-outline-primary:hover {
+    background-color: var(--primary);
+    color: var(--light);
+    transform: translateY(-2px);
+}
+
+/* Иконки */
+.info-list i {
+    color: var(--primary);
+    width: 24px;
+    text-align: center;
+    margin-right: 0.5rem;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .profile-sidebar {
+        margin-bottom: 2rem;
+    }
+    
+    .profile-image {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .action-buttons .btn {
+        width: 100%;
+    }
+}

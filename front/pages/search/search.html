@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Знайти Репетитора - TutorConnect</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="../main/main.css" rel="stylesheet">
+    <link href="search.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary py-3">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="../main/index.html">
+                <i class="fas fa-graduation-cap me-2"></i>TutorConnect
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../main/index.html">Головна</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="search.html">Знайти Репетитора</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../register/register.html">Стати Репетитором</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container py-5">
+        <div class="row">
+            <!-- Filters Sidebar -->
+            <div class="col-lg-3 mb-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-primary text-white py-3">
+                        <h5 class="mb-0"><i class="fas fa-filter me-2"></i>Фільтри</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="searchFilters">
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Предмет</label>
+                                <select class="form-select" id="subjectFilter">
+                                    <option value="">Всі предмети</option>
+                                    <option value="math">Математика</option>
+                                    <option value="science">Наука</option>
+                                    <option value="programming">Програмування</option>
+                                    <option value="languages">Мови</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Рівень</label>
+                                <select class="form-select" id="levelFilter">
+                                    <option value="">Всі рівні</option>
+                                    <option value="beginner">Початковий</option>
+                                    <option value="intermediate">Середній</option>
+                                    <option value="advanced">Просунутий</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Ціна за годину</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" placeholder="Від" id="minPrice">
+                                    <input type="number" class="form-control" placeholder="До" id="maxPrice">
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Рейтинг</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="5" id="rating5">
+                                    <label class="form-check-label" for="rating5">
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="4" id="rating4">
+                                    <label class="form-check-label" for="rating4">
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="far fa-star text-warning"></i>
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="3" id="rating3">
+                                    <label class="form-check-label" for="rating3">
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="far fa-star text-warning"></i>
+                                        <i class="far fa-star text-warning"></i>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Доступність</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="online" id="online">
+                                    <label class="form-check-label" for="online">Онлайн</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="inperson" id="inperson">
+                                    <label class="form-check-label" for="inperson">Особисто</label>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-search me-2"></i>Застосувати Фільтри
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Results -->
+            <div class="col-lg-9">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="mb-0">Знайдено: <span id="resultCount">24</span> репетиторів</h4>
+                    <div class="dropdown">
+                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="sortDropdown" data-bs-toggle="dropdown">
+                            Сортувати за: <span id="currentSort">Рейтингом</span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" data-sort="rating">Рейтингом</a></li>
+                            <li><a class="dropdown-item" href="#" data-sort="price">Ціною</a></li>
+                            <li><a class="dropdown-item" href="#" data-sort="experience">Досвідом</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="tutorResults">
+                    <!-- Tutor cards will be dynamically inserted here -->
+                </div>
+
+                <nav aria-label="Page navigation" class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1">Попередня</a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">Наступна</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-5">
+        <div class="container py-4">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <h4 class="fw-bold mb-4">
+                        <i class="fas fa-graduation-cap me-2"></i>TutorConnect
+                    </h4>
+                    <p>З'єднуємо студентів з найкращими репетиторами з 2023 року. Наша місія - зробити якісну освіту доступною для всіх.</p>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <h5 class="fw-bold mb-4">Швидкі Посилання</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="../main/index.html" class="text-white text-decoration-none">Головна</a></li>
+                        <li class="mb-2"><a href="search.html" class="text-white text-decoration-none">Знайти Репетитора</a></li>
+                        <li class="mb-2"><a href="../register/register.html" class="text-white text-decoration-none">Стати Репетитором</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-4">
+                    <h5 class="fw-bold mb-4">Контакти</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="fas fa-envelope me-2"></i> contact@tutorconnect.com</li>
+                        <li class="mb-2"><i class="fas fa-phone me-2"></i> (123) 456-7890</li>
+                        <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i> 123 Education St, Learnville</li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-4">
+                    <h5 class="fw-bold mb-4">Слідкуйте за Нами</h5>
+                    <div class="social-links">
+                        <a href="#" class="text-white me-3"><i class="fab fa-facebook-f fa-lg"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-twitter fa-lg"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-instagram fa-lg"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-linkedin-in fa-lg"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center">
+                <p class="mb-0">&copy; 2023 TutorConnect. Всі права захищені.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="search.js"></script>
+</body>
+</html>
