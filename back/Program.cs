@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TutorFinder.Models;
+using TutorFinder.Services;
 
 namespace tutorfinder
 {
@@ -10,13 +11,20 @@ namespace tutorfinder
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            // Add DbContext
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            // Add Services
+            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<ITutorService, TutorService>();
+            builder.Services.AddScoped<ISubjectService, SubjectService>();
+            builder.Services.AddScoped<IReviewService, ReviewService>();
 
             var app = builder.Build();
 
@@ -30,7 +38,6 @@ namespace tutorfinder
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 
