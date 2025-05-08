@@ -1,112 +1,131 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using tutorfinder.DTOs;
 using tutorfinder.Models;
-using tutorfinder.Models.DTOs;
 
 namespace tutorfinder.Services
 {
     public class TutorService : ITutorService
     {
         private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public TutorService(ApplicationDbContext context)
+        public TutorService(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public async Task<TutorDto> GetByIdAsync(int id)
-        {
-            var tutor = await _context.Tutors
-                .Include(t => t.Subjects)
-                .Include(t => t.Reviews)
-                .FirstOrDefaultAsync(t => t.Id == id);
-
-            if (tutor == null)
-                return null;
-
-            return MapToDto(tutor);
-        }
-
-        public async Task<IEnumerable<TutorDto>> GetAllAsync()
+        public async Task<IEnumerable<TutorDto>> GetAllTutorsAsync()
         {
             var tutors = await _context.Tutors
-                .Include(t => t.Subjects)
-                .Include(t => t.Reviews)
+                .Include(t => t.User)
+                .Include(t => t.TutorSubjects)
+                    .ThenInclude(ts => ts.Subject)
                 .ToListAsync();
-
-            return tutors.Select(MapToDto);
+            return _mapper.Map<IEnumerable<TutorDto>>(tutors);
         }
 
-        public async Task<TutorDto> CreateAsync(CreateTutorDto createTutorDto)
+        public async Task<TutorDto> GetTutorByIdAsync(int id)
         {
-            var tutor = new Tutor
-            {
-                UserId = createTutorDto.UserId,
-                Education = createTutorDto.Education,
-                Experience = createTutorDto.Experience,
-                Description = createTutorDto.Description,
-                HourlyRate = createTutorDto.HourlyRate,
-                IsAvailable = createTutorDto.IsAvailable,
-                CreatedAt = DateTime.UtcNow
-            };
+            var tutor = await _context.Tutors
+                .Include(t => t.User)
+                .Include(t => t.TutorSubjects)
+                    .ThenInclude(ts => ts.Subject)
+                .FirstOrDefaultAsync(t => t.Id == id);
+            return _mapper.Map<TutorDto>(tutor);
+        }
 
-            if (createTutorDto.SubjectIds != null && createTutorDto.SubjectIds.Any())
-            {
-                var subjects = await _context.Subjects
-                    .Where(s => createTutorDto.SubjectIds.Contains(s.Id))
-                    .ToListAsync();
+        public async Task<TutorDto> GetTutorByUserIdAsync(int userId)
+        {
+            var tutor = await _context.Tutors
+                .Include(t => t.User)
+                .Include(t => t.TutorSubjects)
+                    .ThenInclude(ts => ts.Subject)
+                .FirstOrDefaultAsync(t => t.UserId == userId);
+            return _mapper.Map<TutorDto>(tutor);
+        }
 
-                tutor.Subjects = subjects;
+        public async Task<IEnumerable<TutorDto>> GetTutorsBySubjectAsync(int subjectId)
+        {
+            var tutors = await _context.Tutors
+                .Include(t => t.User)
+                .Include(t => t.TutorSubjects)
+                    .ThenInclude(ts => ts.Subject)
+                .Where(t => t.TutorSubjects.Any(ts => ts.SubjectsId == subjectId))
+                .ToListAsync();
+            return _mapper.Map<IEnumerable<TutorDto>>(tutors);
+        }
+
+        public async Task<IEnumerable<TutorDto>> SearchTutorsAsync(string searchTerm)
+        {
+            var tutors = await _context.Tutors
+                .Include(t => t.User)
+                .Include(t => t.TutorSubjects)
+                    .ThenInclude(ts => ts.Subject)
+                .Where(t => 
+                    t.User.FirstName.Contains(searchTerm) ||
+                    t.User.LastName.Contains(searchTerm) ||
+                    t.Bio.Contains(searchTerm) ||
+                    t.Education.Contains(searchTerm) ||
+                    t.TeachingStyle.Contains(searchTerm))
+                .ToListAsync();
+            return _mapper.Map<IEnumerable<TutorDto>>(tutors);
+        }
+
+        public async Task<TutorDto> CreateTutorAsync(CreateTutorDto createTutorDto)
+        {
+            var tutor = _mapper.Map<Tutor>(createTutorDto);
+
+            if (createTutorDto.SubjectIds != null)
+            {
+                foreach (var subjectId in createTutorDto.SubjectIds)
+                {
+                    tutor.TutorSubjects.Add(new TutorSubject
+                    {
+                        TutorsId = tutor.Id,
+                        SubjectsId = subjectId
+                    });
+                }
             }
 
             _context.Tutors.Add(tutor);
             await _context.SaveChangesAsync();
 
-            return await GetByIdAsync(tutor.Id);
+            return await GetTutorByIdAsync(tutor.Id);
         }
 
-        public async Task<TutorDto> UpdateAsync(int id, UpdateTutorDto updateTutorDto)
+        public async Task<TutorDto> UpdateTutorAsync(int id, UpdateTutorDto updateTutorDto)
         {
             var tutor = await _context.Tutors
-                .Include(t => t.Subjects)
+                .Include(t => t.TutorSubjects)
                 .FirstOrDefaultAsync(t => t.Id == id);
 
-            if (tutor == null)
-                return null;
+            if (tutor == null) return null;
 
-            if (!string.IsNullOrEmpty(updateTutorDto.Education))
-                tutor.Education = updateTutorDto.Education;
-
-            if (!string.IsNullOrEmpty(updateTutorDto.Experience))
-                tutor.Experience = updateTutorDto.Experience;
-
-            if (!string.IsNullOrEmpty(updateTutorDto.Description))
-                tutor.Description = updateTutorDto.Description;
-
-            if (updateTutorDto.HourlyRate.HasValue)
-                tutor.HourlyRate = updateTutorDto.HourlyRate.Value;
-
-            if (updateTutorDto.IsAvailable.HasValue)
-                tutor.IsAvailable = updateTutorDto.IsAvailable.Value;
+            _mapper.Map(updateTutorDto, tutor);
 
             if (updateTutorDto.SubjectIds != null)
             {
-                var subjects = await _context.Subjects
-                    .Where(s => updateTutorDto.SubjectIds.Contains(s.Id))
-                    .ToListAsync();
+                // Удаляем старые связи
+                tutor.TutorSubjects.Clear();
 
-                tutor.Subjects = subjects;
+                // Добавляем новые связи
+                foreach (var subjectId in updateTutorDto.SubjectIds)
+                {
+                    tutor.TutorSubjects.Add(new TutorSubject
+                    {
+                        TutorsId = tutor.Id,
+                        SubjectsId = subjectId
+                    });
+                }
             }
 
             await _context.SaveChangesAsync();
-
-            return await GetByIdAsync(tutor.Id);
+            return await GetTutorByIdAsync(tutor.Id);
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteTutorAsync(int id)
         {
             var tutor = await _context.Tutors.FindAsync(id);
             if (tutor != null)
@@ -116,57 +135,14 @@ namespace tutorfinder.Services
             }
         }
 
-        public async Task<IEnumerable<TutorDto>> GetBySubjectIdAsync(int subjectId)
+        public async Task<bool> TutorExistsAsync(int id)
         {
-            var tutors = await _context.Tutors
-                .Include(t => t.Subjects)
-                .Include(t => t.Reviews)
-                .Where(t => t.Subjects.Any(s => s.Id == subjectId))
-                .ToListAsync();
-
-            return tutors.Select(MapToDto);
+            return await _context.Tutors.AnyAsync(e => e.Id == id);
         }
 
-        public async Task<IEnumerable<TutorDto>> GetAvailableTutorsAsync()
+        public async Task<bool> TutorExistsByUserIdAsync(int userId)
         {
-            var tutors = await _context.Tutors
-                .Include(t => t.Subjects)
-                .Include(t => t.Reviews)
-                .Where(t => t.IsAvailable)
-                .ToListAsync();
-
-            return tutors.Select(MapToDto);
-        }
-
-        private static TutorDto MapToDto(Tutor tutor)
-        {
-            return new TutorDto
-            {
-                Id = tutor.Id,
-                UserId = tutor.UserId,
-                Education = tutor.Education,
-                Experience = tutor.Experience,
-                Description = tutor.Description,
-                HourlyRate = tutor.HourlyRate,
-                IsAvailable = tutor.IsAvailable,
-                CreatedAt = tutor.CreatedAt,
-                Subjects = tutor.Subjects?.Select(s => new SubjectDto
-                {
-                    Id = s.Id,
-                    Name = s.Name,
-                    Description = s.Description,
-                    CreatedAt = s.CreatedAt
-                }).ToList(),
-                Reviews = tutor.Reviews?.Select(r => new ReviewDto
-                {
-                    Id = r.Id,
-                    TutorId = r.TutorId,
-                    StudentId = r.StudentId,
-                    Rating = r.Rating,
-                    Comment = r.Comment,
-                    CreatedAt = r.CreatedAt
-                }).ToList()
-            };
+            return await _context.Tutors.AnyAsync(e => e.UserId == userId);
         }
     }
 } 

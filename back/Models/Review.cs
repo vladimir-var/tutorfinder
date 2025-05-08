@@ -1,34 +1,35 @@
-using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace TutorFinder.Models
+namespace tutorfinder.Models
 {
     public class Review
     {
-        [Key]
+        [Column("id")]
         public int Id { get; set; }
 
         [Required]
+        [Column("tutorid")]
         public int TutorId { get; set; }
-        public Tutor Tutor { get; set; }
 
         [Required]
+        [Column("studentid")]
         public int StudentId { get; set; }
-        public User Student { get; set; }
 
         [Required]
         [Range(1, 5)]
+        [Column("rating")]
         public int Rating { get; set; }
 
-        [Required]
-        [StringLength(1000)]
-        public string Comment { get; set; }
+        [Column("comment")]
+        public string? Comment { get; set; }
 
         [Required]
-        public DateTime CreatedAt { get; set; }
-
-        public DateTime? UpdatedAt { get; set; }
-
+        [Column("isverified")]
         public bool IsVerified { get; set; } = false;
+
+        // Навигационные свойства
+        public Tutor Tutor { get; set; }
+        public User Student { get; set; }
     }
 } 

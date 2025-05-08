@@ -1,82 +1,67 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using tutorfinder.DTOs;
 using tutorfinder.Models;
-using tutorfinder.Models.DTOs;
 
 namespace tutorfinder.Services
 {
     public class UserService : IUserService
     {
         private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public UserService(ApplicationDbContext context)
+        public UserService(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public async Task<UserDto> GetByIdAsync(int id)
-        {
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
-                return null;
-
-            return MapToDto(user);
-        }
-
-        public async Task<IEnumerable<UserDto>> GetAllAsync()
+        public async Task<IEnumerable<UserDto>> GetAllUsersAsync()
         {
             var users = await _context.Users.ToListAsync();
-            return users.Select(MapToDto);
+            return _mapper.Map<IEnumerable<UserDto>>(users);
         }
 
-        public async Task<UserDto> CreateAsync(CreateUserDto createUserDto)
+        public async Task<UserDto> GetUserByIdAsync(int id)
         {
-            var user = new User
-            {
-                Email = createUserDto.Email,
-                Password = BCrypt.Net.BCrypt.HashPassword(createUserDto.Password),
-                FirstName = createUserDto.FirstName,
-                LastName = createUserDto.LastName,
-                PhoneNumber = createUserDto.PhoneNumber,
-                CreatedAt = DateTime.UtcNow
-            };
+            var user = await _context.Users.FindAsync(id);
+            return _mapper.Map<UserDto>(user);
+        }
+
+        public async Task<UserDto> GetUserByEmailAsync(string email)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            return _mapper.Map<UserDto>(user);
+        }
+
+        public async Task<UserDto> CreateUserAsync(CreateUserDto createUserDto)
+        {
+            var user = _mapper.Map<User>(createUserDto);
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(createUserDto.Password);
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return MapToDto(user);
+            return _mapper.Map<UserDto>(user);
         }
 
-        public async Task<UserDto> UpdateAsync(int id, UpdateUserDto updateUserDto)
+        public async Task<UserDto> UpdateUserAsync(int id, UpdateUserDto updateUserDto)
         {
             var user = await _context.Users.FindAsync(id);
-            if (user == null)
-                return null;
+            if (user == null) return null;
 
-            if (!string.IsNullOrEmpty(updateUserDto.Email))
-                user.Email = updateUserDto.Email;
+            _mapper.Map(updateUserDto, user);
 
             if (!string.IsNullOrEmpty(updateUserDto.Password))
-                user.Password = BCrypt.Net.BCrypt.HashPassword(updateUserDto.Password);
-
-            if (!string.IsNullOrEmpty(updateUserDto.FirstName))
-                user.FirstName = updateUserDto.FirstName;
-
-            if (!string.IsNullOrEmpty(updateUserDto.LastName))
-                user.LastName = updateUserDto.LastName;
-
-            if (!string.IsNullOrEmpty(updateUserDto.PhoneNumber))
-                user.PhoneNumber = updateUserDto.PhoneNumber;
+            {
+                user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(updateUserDto.Password);
+            }
 
             await _context.SaveChangesAsync();
-
-            return MapToDto(user);
+            return _mapper.Map<UserDto>(user);
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteUserAsync(int id)
         {
             var user = await _context.Users.FindAsync(id);
             if (user != null)
@@ -86,23 +71,14 @@ namespace tutorfinder.Services
             }
         }
 
-        public async Task<UserDto> GetByEmailAsync(string email)
+        public async Task<bool> UserExistsAsync(int id)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
-            return user != null ? MapToDto(user) : null;
+            return await _context.Users.AnyAsync(e => e.Id == id);
         }
 
-        private static UserDto MapToDto(User user)
+        public async Task<bool> UserExistsByEmailAsync(string email)
         {
-            return new UserDto
-            {
-                Id = user.Id,
-                Email = user.Email,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                PhoneNumber = user.PhoneNumber,
-                CreatedAt = user.CreatedAt
-            };
+            return await _context.Users.AnyAsync(e => e.Email == email);
         }
     }
 } 

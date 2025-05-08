@@ -1,34 +1,42 @@
-using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace TutorFinder.Models
+namespace tutorfinder.Models
 {
     public class User
     {
-        [Key]
+        [Column("id")]
         public int Id { get; set; }
 
         [Required]
-        [StringLength(50)]
-        public string FirstName { get; set; }
-
-        [Required]
-        [StringLength(50)]
-        public string LastName { get; set; }
-
-        [Required]
         [EmailAddress]
-        [StringLength(100)]
+        [Column("email")]
         public string Email { get; set; }
 
         [Required]
-        [StringLength(100)]
+        [Column("passwordhash")]
         public string PasswordHash { get; set; }
 
-        [Phone]
-        [StringLength(20)]
-        public string PhoneNumber { get; set; }
+        [Required]
+        [Column("firstname")]
+        public string FirstName { get; set; }
 
-        public string ProfileImage { get; set; }
+        [Required]
+        [Column("lastname")]
+        public string LastName { get; set; }
+
+        [Column("phone")]
+        public string? Phone { get; set; }
+
+        [Column("profileimage")]
+        public string? ProfileImage { get; set; }
+
+        [Required]
+        [Column("role")]
+        public string Role { get; set; }
+
+        // Навигационные свойства
+        public Tutor Tutor { get; set; }
+        public ICollection<Review> Reviews { get; set; }
     }
 } 
