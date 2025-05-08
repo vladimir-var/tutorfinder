@@ -1,50 +1,53 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace TutorFinder.Models
+namespace tutorfinder.Models
 {
     public class Tutor
     {
-        [Key]
+        [Column("id")]
         public int Id { get; set; }
 
         [Required]
+        [Column("userid")]
         public int UserId { get; set; }
-        public User User { get; set; }
 
         [Required]
-        [StringLength(500)]
+        [Column("bio")]
         public string Bio { get; set; }
 
         [Required]
-        [StringLength(200)]
+        [Column("education")]
         public string Education { get; set; }
 
         [Required]
+        [Column("yearsofexperience")]
         public int YearsOfExperience { get; set; }
 
         [Required]
-        [Range(0, 1000)]
+        [Column("hourlyrate", TypeName = "decimal(10,2)")]
+        [Range(0, 10000)]
         public decimal HourlyRate { get; set; }
 
+        [Required]
+        [Column("isavailable")]
         public bool IsAvailable { get; set; } = true;
 
-        public string TeachingStyle { get; set; }
+        [Column("teachingstyle")]
+        public string? TeachingStyle { get; set; }
 
-        public string Certifications { get; set; }
+        [Column("certifications")]
+        public string? Certifications { get; set; }
 
-        public virtual ICollection<Subject> Subjects { get; set; }
-        public virtual ICollection<Review> Reviews { get; set; }
-        public virtual ICollection<Lesson> Lessons { get; set; }
+        [Column("averagerating", TypeName = "decimal(3,2)")]
+        public decimal AverageRating { get; set; } = 0;
 
-        public double AverageRating { get; set; }
+        [Column("totalreviews")]
+        public int TotalReviews { get; set; } = 0;
 
-        public int TotalReviews { get; set; }
-
-        [Required]
-        public DateTime CreatedAt { get; set; }
-
-        public DateTime? UpdatedAt { get; set; }
+        // Навигационные свойства
+        public User User { get; set; }
+        public ICollection<TutorSubject> TutorSubjects { get; set; }
+        public ICollection<Review> Reviews { get; set; }
     }
 } 

@@ -1,33 +1,28 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace TutorFinder.Models
+namespace tutorfinder.Models
 {
     public class Subject
     {
-        [Key]
+        [Column("id")]
         public int Id { get; set; }
 
         [Required]
-        [StringLength(100)]
+        [Column("name")]
         public string Name { get; set; }
 
-        [StringLength(500)]
-        public string Description { get; set; }
+        [Column("description")]
+        public string? Description { get; set; }
 
         [Required]
-        [StringLength(50)]
+        [Column("category")]
         public string Category { get; set; }
 
-        public string Icon { get; set; }
+        [Column("icon")]
+        public string? Icon { get; set; }
 
-        public virtual ICollection<Tutor> Tutors { get; set; }
-        public virtual ICollection<Lesson> Lessons { get; set; }
-
-        [Required]
-        public DateTime CreatedAt { get; set; }
-
-        public DateTime? UpdatedAt { get; set; }
+        // Навигационные свойства
+        public ICollection<TutorSubject> TutorSubjects { get; set; }
     }
 } 

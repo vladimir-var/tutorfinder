@@ -1,16 +1,17 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using tutorfinder.Models.DTOs;
+using tutorfinder.DTOs;
 
 namespace tutorfinder.Services
 {
     public interface IReviewService
     {
-        Task<ReviewDto> GetByIdAsync(int id);
-        Task<IEnumerable<ReviewDto>> GetAllAsync();
-        Task<ReviewDto> CreateAsync(CreateReviewDto createReviewDto);
-        Task DeleteAsync(int id);
-        Task<IEnumerable<ReviewDto>> GetByTutorIdAsync(int tutorId);
-        Task<IEnumerable<ReviewDto>> GetByStudentIdAsync(int studentId);
+        Task<IEnumerable<ReviewDto>> GetAllReviewsAsync();
+        Task<IEnumerable<ReviewDto>> GetReviewsByTutorIdAsync(int tutorId);
+        Task<IEnumerable<ReviewDto>> GetReviewsByStudentIdAsync(int studentId);
+        Task<ReviewDto> GetReviewByIdAsync(int id);
+        Task<ReviewDto> CreateReviewAsync(CreateReviewDto createReviewDto);
+        Task<ReviewDto> UpdateReviewAsync(int id, UpdateReviewDto updateReviewDto);
+        Task DeleteReviewAsync(int id);
+        Task<bool> ReviewExistsAsync(int id);
+        Task<bool> HasStudentReviewedTutorAsync(int studentId, int tutorId);
     }
 } 

@@ -1,17 +1,18 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using tutorfinder.Models.DTOs;
+using tutorfinder.DTOs;
 
 namespace tutorfinder.Services
 {
     public interface ITutorService
     {
-        Task<TutorDto> GetByIdAsync(int id);
-        Task<IEnumerable<TutorDto>> GetAllAsync();
-        Task<TutorDto> CreateAsync(CreateTutorDto createTutorDto);
-        Task<TutorDto> UpdateAsync(int id, UpdateTutorDto updateTutorDto);
-        Task DeleteAsync(int id);
-        Task<IEnumerable<TutorDto>> GetBySubjectIdAsync(int subjectId);
-        Task<IEnumerable<TutorDto>> GetAvailableTutorsAsync();
+        Task<IEnumerable<TutorDto>> GetAllTutorsAsync();
+        Task<TutorDto> GetTutorByIdAsync(int id);
+        Task<TutorDto> GetTutorByUserIdAsync(int userId);
+        Task<IEnumerable<TutorDto>> GetTutorsBySubjectAsync(int subjectId);
+        Task<IEnumerable<TutorDto>> SearchTutorsAsync(string searchTerm);
+        Task<TutorDto> CreateTutorAsync(CreateTutorDto createTutorDto);
+        Task<TutorDto> UpdateTutorAsync(int id, UpdateTutorDto updateTutorDto);
+        Task DeleteTutorAsync(int id);
+        Task<bool> TutorExistsAsync(int id);
+        Task<bool> TutorExistsByUserIdAsync(int userId);
     }
 } 

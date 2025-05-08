@@ -1,6 +1,1 @@
 @tutorfinder_HostAddress = http://localhost:5181
-
-GET {{tutorfinder_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

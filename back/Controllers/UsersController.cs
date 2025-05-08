@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using tutorfinder.Models.DTOs;
+using tutorfinder.DTOs;
 using tutorfinder.Services;
 
 namespace tutorfinder.Controllers
@@ -15,44 +15,79 @@ namespace tutorfinder.Controllers
             _userService = userService;
         }
 
+        // GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetAll()
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
         {
-            var users = await _userService.GetAllAsync();
+            var users = await _userService.GetAllUsersAsync();
             return Ok(users);
         }
 
+        // GET: api/Users/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserDto>> GetById(int id)
+        public async Task<ActionResult<UserDto>> GetUser(int id)
         {
-            var user = await _userService.GetByIdAsync(id);
+            var user = await _userService.GetUserByIdAsync(id);
             if (user == null)
+            {
                 return NotFound();
-
+            }
             return Ok(user);
         }
 
+        // GET: api/Users/email/example@email.com
+        [HttpGet("email/{email}")]
+        public async Task<ActionResult<UserDto>> GetUserByEmail(string email)
+        {
+            var user = await _userService.GetUserByEmailAsync(email);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return Ok(user);
+        }
+
+        // POST: api/Users
         [HttpPost]
-        public async Task<ActionResult<UserDto>> Create(CreateUserDto createUserDto)
+        public async Task<ActionResult<UserDto>> CreateUser(CreateUserDto createUserDto)
         {
-            var user = await _userService.CreateAsync(createUserDto);
-            return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);
+            if (await _userService.UserExistsByEmailAsync(createUserDto.Email))
+            {
+                return BadRequest("Пользователь с таким email уже существует");
+            }
+
+            var user = await _userService.CreateUserAsync(createUserDto);
+            return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
         }
 
+        // PUT: api/Users/5
         [HttpPut("{id}")]
-        public async Task<ActionResult<UserDto>> Update(int id, UpdateUserDto updateUserDto)
+        public async Task<IActionResult> UpdateUser(int id, UpdateUserDto updateUserDto)
         {
-            var user = await _userService.UpdateAsync(id, updateUserDto);
-            if (user == null)
+            if (!await _userService.UserExistsAsync(id))
+            {
                 return NotFound();
+            }
+
+            var user = await _userService.UpdateUserAsync(id, updateUserDto);
+            if (user == null)
+            {
+                return BadRequest();
+            }
 
             return Ok(user);
         }
 
+        // DELETE: api/Users/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeleteUser(int id)
         {
-            await _userService.DeleteAsync(id);
+            if (!await _userService.UserExistsAsync(id))
+            {
+                return NotFound();
+            }
+
+            await _userService.DeleteUserAsync(id);
             return NoContent();
         }
     }

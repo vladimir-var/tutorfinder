@@ -1,53 +1,60 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using tutorfinder.DTOs;
 using tutorfinder.Models;
-using tutorfinder.Models.DTOs;
 
 namespace tutorfinder.Services
 {
     public class SubjectService : ISubjectService
     {
         private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public SubjectService(ApplicationDbContext context)
+        public SubjectService(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public async Task<SubjectDto> GetByIdAsync(int id)
-        {
-            var subject = await _context.Subjects.FindAsync(id);
-            if (subject == null)
-                return null;
-
-            return MapToDto(subject);
-        }
-
-        public async Task<IEnumerable<SubjectDto>> GetAllAsync()
+        public async Task<IEnumerable<SubjectDto>> GetAllSubjectsAsync()
         {
             var subjects = await _context.Subjects.ToListAsync();
-            return subjects.Select(MapToDto);
+            return _mapper.Map<IEnumerable<SubjectDto>>(subjects);
         }
 
-        public async Task<SubjectDto> CreateAsync(CreateSubjectDto createSubjectDto)
+        public async Task<IEnumerable<SubjectDto>> GetSubjectsByCategoryAsync(string category)
         {
-            var subject = new Subject
-            {
-                Name = createSubjectDto.Name,
-                Description = createSubjectDto.Description,
-                CreatedAt = DateTime.UtcNow
-            };
+            var subjects = await _context.Subjects
+                .Where(s => s.Category == category)
+                .ToListAsync();
+            return _mapper.Map<IEnumerable<SubjectDto>>(subjects);
+        }
 
+        public async Task<SubjectDto> GetSubjectByIdAsync(int id)
+        {
+            var subject = await _context.Subjects.FindAsync(id);
+            return _mapper.Map<SubjectDto>(subject);
+        }
+
+        public async Task<SubjectDto> CreateSubjectAsync(CreateSubjectDto createSubjectDto)
+        {
+            var subject = _mapper.Map<Subject>(createSubjectDto);
             _context.Subjects.Add(subject);
             await _context.SaveChangesAsync();
-
-            return MapToDto(subject);
+            return _mapper.Map<SubjectDto>(subject);
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task<SubjectDto> UpdateSubjectAsync(int id, UpdateSubjectDto updateSubjectDto)
+        {
+            var subject = await _context.Subjects.FindAsync(id);
+            if (subject == null) return null;
+
+            _mapper.Map(updateSubjectDto, subject);
+            await _context.SaveChangesAsync();
+            return _mapper.Map<SubjectDto>(subject);
+        }
+
+        public async Task DeleteSubjectAsync(int id)
         {
             var subject = await _context.Subjects.FindAsync(id);
             if (subject != null)
@@ -57,15 +64,25 @@ namespace tutorfinder.Services
             }
         }
 
-        private static SubjectDto MapToDto(Subject subject)
+        public async Task<bool> SubjectExistsAsync(int id)
         {
-            return new SubjectDto
-            {
-                Id = subject.Id,
-                Name = subject.Name,
-                Description = subject.Description,
-                CreatedAt = subject.CreatedAt
-            };
+            return await _context.Subjects.AnyAsync(e => e.Id == id);
+        }
+
+        public async Task<bool> SubjectExistsByNameAsync(string name)
+        {
+            return await _context.Subjects.AnyAsync(e => e.Name == name);
+        }
+
+        public async Task<IEnumerable<SubjectDto>> SearchSubjectsAsync(string searchTerm)
+        {
+            var subjects = await _context.Subjects
+                .Where(s => 
+                    s.Name.Contains(searchTerm) ||
+                    s.Description.Contains(searchTerm) ||
+                    s.Category.Contains(searchTerm))
+                .ToListAsync();
+            return _mapper.Map<IEnumerable<SubjectDto>>(subjects);
         }
     }
 } 

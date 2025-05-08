@@ -1,14 +1,17 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using tutorfinder.Models.DTOs;
+using tutorfinder.DTOs;
 
 namespace tutorfinder.Services
 {
     public interface ISubjectService
     {
-        Task<SubjectDto> GetByIdAsync(int id);
-        Task<IEnumerable<SubjectDto>> GetAllAsync();
-        Task<SubjectDto> CreateAsync(CreateSubjectDto createSubjectDto);
-        Task DeleteAsync(int id);
+        Task<IEnumerable<SubjectDto>> GetAllSubjectsAsync();
+        Task<IEnumerable<SubjectDto>> GetSubjectsByCategoryAsync(string category);
+        Task<SubjectDto> GetSubjectByIdAsync(int id);
+        Task<SubjectDto> CreateSubjectAsync(CreateSubjectDto createSubjectDto);
+        Task<SubjectDto> UpdateSubjectAsync(int id, UpdateSubjectDto updateSubjectDto);
+        Task DeleteSubjectAsync(int id);
+        Task<bool> SubjectExistsAsync(int id);
+        Task<bool> SubjectExistsByNameAsync(string name);
+        Task<IEnumerable<SubjectDto>> SearchSubjectsAsync(string searchTerm);
     }
 } 
