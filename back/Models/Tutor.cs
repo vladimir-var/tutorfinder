@@ -5,6 +5,12 @@ namespace tutorfinder.Models
 {
     public class Tutor
     {
+        public Tutor()
+        {
+            TutorSubjects = new List<TutorSubject>();
+            Reviews = new List<Review>();
+        }
+
         [Column("id")]
         public int Id { get; set; }
 
