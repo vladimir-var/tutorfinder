@@ -86,11 +86,11 @@ namespace tutorfinder.Services
             {
                 foreach (var subjectId in createTutorDto.SubjectIds)
                 {
-                    tutor.TutorSubjects.Add(new TutorSubject
-                    {
-                        TutorsId = tutor.Id,
-                        SubjectsId = subjectId
-                    });
+                        tutor.TutorSubjects.Add(new TutorSubject
+                        {
+                            TutorsId = tutor.Id,
+                            SubjectsId = subjectId
+                        });
                 }
                 await _context.SaveChangesAsync();
             }

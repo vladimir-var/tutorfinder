@@ -39,7 +39,7 @@ var app = builder.Build();
 
 // Настройка middleware
 if (app.Environment.IsDevelopment())
-{
+        {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
