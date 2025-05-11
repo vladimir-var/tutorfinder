@@ -42,6 +42,12 @@
                         <h4 class="mb-0"><i class="fas fa-user-plus me-2"></i>Реєстрація Репетитора</h4>
                     </div>
                     <div class="card-body p-4">
+                        <!-- Alert для ошибок -->
+                        <div id="errorAlert" class="alert alert-danger d-none" role="alert">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            <span id="errorMessage"></span>
+                        </div>
+
                         <form id="registerForm" novalidate>
                             <!-- Personal Information -->
                             <h5 class="fw-bold mb-3">Особиста Інформація</h5>
@@ -64,7 +70,7 @@
                                 <div class="col-md-6">
                                     <label for="phone" class="form-label">Телефон</label>
                                     <input type="tel" class="form-control" id="phone" required
-                                           placeholder="+380 XX XXX XX XX">
+                                           placeholder="+38 (___) ___-__-__">
                                 </div>
                             </div>
 
@@ -79,25 +85,14 @@
                                 <div class="col-md-6">
                                     <label for="experience" class="form-label">Досвід (роки)</label>
                                     <input type="number" class="form-control" id="experience" min="0" required
-                                           placeholder="Введіть кількість років досвіду">
+                                           placeholder="Введіть роки досвіду">
                                 </div>
                                 <div class="col-12">
                                     <label for="subjects" class="form-label">Предмети</label>
                                     <select class="form-select" id="subjects" multiple required>
                                         <option value="" disabled>Виберіть предмети</option>
                                     </select>
-                                    <div class="form-text">Утримуйте Ctrl для вибору кількох предметів</div>
-                                </div>
-                                <div class="col-12">
-                                    <label for="levels" class="form-label">Рівні</label>
-                                    <select class="form-select" id="levels" multiple required>
-                                        <option value="elementary">Початкова школа</option>
-                                        <option value="middle">Середня школа</option>
-                                        <option value="high">Старша школа</option>
-                                        <option value="university">Університет</option>
-                                        <option value="adult">Дорослі</option>
-                                    </select>
-                                    <div class="form-text">Утримуйте Ctrl для вибору кількох рівнів</div>
+                                    <div class="form-text">Утримуйте Ctrl (Cmd на Mac) для вибору кількох предметів</div>
                                 </div>
                             </div>
 
@@ -107,10 +102,18 @@
                                 <div class="col-md-6">
                                     <label for="price" class="form-label">Ціна за годину (грн)</label>
                                     <div class="input-group">
-                                        <input type="number" class="form-control" id="price" min="0" required
+                                        <input type="number" 
+                                               class="form-control" 
+                                               id="price" 
+                                               name="price"
+                                               min="0" 
+                                               max="10000" 
+                                               step="1"
+                                               required
                                                placeholder="Введіть ціну">
                                         <span class="input-group-text">₴</span>
                                     </div>
+                                    <div class="form-text">Ціна повинна бути від 0 до 10000 грн</div>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="availability" class="form-label">Доступність</label>
@@ -134,22 +137,17 @@
                                     <label for="password" class="form-label">Пароль</label>
                                     <div class="input-group">
                                         <input type="password" class="form-control" id="password" required
-                                               placeholder="Введіть пароль">
-                                        <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('password')">
+                                               placeholder="Мінімум 8 символів">
+                                        <button class="btn btn-outline-secondary" type="button" id="togglePassword">
                                             <i class="fas fa-eye"></i>
                                         </button>
                                     </div>
-                                    <div class="form-text">Мінімум 8 символів, включаючи літери та цифри</div>
+                                    <div class="form-text">Пароль повинен містити мінімум 8 символів, включаючи літери та цифри</div>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="confirmPassword" class="form-label">Підтвердіть пароль</label>
-                                    <div class="input-group">
-                                        <input type="password" class="form-control" id="confirmPassword" required
-                                               placeholder="Повторіть пароль">
-                                        <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('confirmPassword')">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                    </div>
+                                    <input type="password" class="form-control" id="confirmPassword" required
+                                           placeholder="Повторіть пароль">
                                 </div>
                             </div>
 
@@ -160,9 +158,12 @@
                                 </label>
                             </div>
 
-                            <button type="submit" class="btn btn-primary w-100 py-3">
-                                <i class="fas fa-user-plus me-2"></i>Зареєструватися
-                            </button>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <span id="loadingSpinner" class="spinner-border spinner-border-sm d-none me-2" role="status" aria-hidden="true"></span>
+                                    Зареєструватися
+                                </button>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -214,24 +215,8 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../js/api.js"></script>
-    <script src="../js/validation.js"></script>
-    <script>
-        function togglePassword(inputId) {
-            const input = document.getElementById(inputId);
-            const icon = input.nextElementSibling.querySelector('i');
-            
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                input.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
-        }
-    </script>
+    <script src="../../js/api.js"></script>
+    <script src="../../js/validation.js"></script>
     <script src="register.js"></script>
 </body>
 </html> 
