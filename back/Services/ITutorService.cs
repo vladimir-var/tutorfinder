@@ -14,5 +14,7 @@ namespace tutorfinder.Services
         Task DeleteTutorAsync(int id);
         Task<bool> TutorExistsAsync(int id);
         Task<bool> TutorExistsByUserIdAsync(int userId);
+        Task<IEnumerable<CertificateDto>> GetTutorCertificatesAsync(int tutorId);
+        Task<IEnumerable<ReviewDto>> GetTutorReviewsAsync(int tutorId);
     }
 } 

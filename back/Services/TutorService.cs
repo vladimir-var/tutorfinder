@@ -142,7 +142,24 @@ namespace tutorfinder.Services
 
         public async Task<bool> TutorExistsByUserIdAsync(int userId)
         {
-            return await _context.Tutors.AnyAsync(e => e.UserId == userId);
+            return await _context.Tutors.AnyAsync(t => t.UserId == userId);
+        }
+
+        public async Task<IEnumerable<CertificateDto>> GetTutorCertificatesAsync(int tutorId)
+        {
+            var certificates = await _context.Certificates
+                .Where(c => c.TutorId == tutorId)
+                .ToListAsync();
+            return _mapper.Map<IEnumerable<CertificateDto>>(certificates);
+        }
+
+        public async Task<IEnumerable<ReviewDto>> GetTutorReviewsAsync(int tutorId)
+        {
+            var reviews = await _context.Reviews
+                .Include(r => r.Student)
+                .Where(r => r.TutorId == tutorId)
+                .ToListAsync();
+            return _mapper.Map<IEnumerable<ReviewDto>>(reviews);
         }
     }
 } 
