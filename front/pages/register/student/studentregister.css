@@ -1,9 +1,9 @@
-/* Registration Page Styles */
+/* Registration Student Page Styles */
 :root {
-    --primary: #2C4A52;      /* Сине-зеленый */
-    --secondary: #537072;    /* Фарватер */
-    --accent: #8E9B97;       /* Дымка */
-    --light: #F4EBDB;       /* Смог */
+    --primary: #2C4A52;
+    --secondary: #537072;
+    --accent: #8E9B97;
+    --light: #F4EBDB;
     --dark: #2C4A52;
     --primary-light: #3a5f69;
     --primary-dark: #1e353b;
@@ -25,7 +25,7 @@
     padding: 1.5rem;
 }
 
-.registration-header h3 {
+.registration-header h4 {
     margin: 0;
     display: flex;
     align-items: center;
@@ -35,10 +35,6 @@
 .registration-body {
     padding: 2rem;
     background-color: white;
-}
-
-.form-group {
-    margin-bottom: 1.5rem;
 }
 
 .form-label {
@@ -53,11 +49,6 @@
 }
 
 .form-control:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 0.2rem rgba(44, 74, 82, 0.25);
-}
-
-.form-select:focus {
     border-color: var(--primary);
     box-shadow: 0 0 0 0.2rem rgba(44, 74, 82, 0.25);
 }
@@ -85,24 +76,10 @@
     color: var(--primary) !important;
 }
 
-/* Стили для мультиселекта */
-select[multiple] {
-    background-color: white;
-    border: 1px solid var(--accent);
-    min-height: 120px;
-}
-
-select[multiple] option:checked {
-    background-color: var(--primary) !important;
-    color: var(--light);
-}
-
-/* Стили для индикатора загрузки */
 .spinner-border {
     color: var(--light);
 }
 
-/* Стили для кнопки показать/скрыть пароль */
 #togglePassword {
     border-color: var(--accent);
     color: var(--dark);
@@ -114,21 +91,18 @@ select[multiple] option:checked {
     color: var(--dark);
 }
 
-/* Стили для подсказок */
 .form-text {
     color: var(--accent-dark);
     font-size: 0.875rem;
     margin-top: 0.25rem;
 }
 
-/* Стили для сообщений об ошибках */
 .invalid-feedback {
     color: #dc3545;
     font-size: 0.875rem;
     margin-top: 0.25rem;
 }
 
-/* Анимация для кнопки */
 @keyframes pulse {
     0% {
         box-shadow: 0 0 0 0 rgba(44, 74, 82, 0.4);
@@ -145,20 +119,17 @@ select[multiple] option:checked {
     animation: pulse 1.5s infinite;
 }
 
-/* Стили для плейсхолдеров */
 ::placeholder {
     color: var(--accent-light) !important;
     opacity: 1;
 }
 
-/* Стили для отключенной кнопки */
 .btn-primary:disabled {
     background-color: var(--accent);
     border-color: var(--accent);
     cursor: not-allowed;
 }
 
-/* Стили для ссылок в футере */
 footer a {
     transition: color 0.3s ease;
 }
@@ -167,21 +138,17 @@ footer a:hover {
     color: var(--accent-light) !important;
 }
 
-/* Адаптивные стили */
 @media (max-width: 768px) {
     .registration-body {
         padding: 1.5rem;
     }
-
     .card {
         margin: 0 1rem;
     }
-
     .form-label {
         font-size: 0.9rem;
     }
-
     .btn-primary {
         padding: 0.5rem 1rem;
     }
-}
+} 
