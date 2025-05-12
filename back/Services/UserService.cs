@@ -34,6 +34,11 @@ namespace tutorfinder.Services
             return _mapper.Map<UserDto>(user);
         }
 
+        public async Task<User> GetUserWithPasswordAsync(string email)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        }
+
         public async Task<UserDto> CreateUserAsync(CreateUserDto createUserDto)
         {
             var user = _mapper.Map<User>(createUserDto);

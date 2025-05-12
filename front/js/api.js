@@ -3,6 +3,64 @@ class ApiClient {
         this.baseUrl = baseUrl;
     }
 
+    async get(endpoint) {
+        try {
+            const response = await fetch(`${this.baseUrl}${endpoint}`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                let errorText = await response.text();
+                let errorMessage;
+                try {
+                    errorMessage = JSON.parse(errorText).message;
+                } catch {
+                    errorMessage = errorText;
+                }
+                throw new Error(errorMessage || 'Ошибка при выполнении запроса');
+            }
+
+            return response;
+        } catch (error) {
+            console.error('Ошибка при выполнении запроса:', error);
+            throw error;
+        }
+    }
+
+    async post(endpoint, data) {
+        try {
+            const response = await fetch(`${this.baseUrl}${endpoint}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (!response.ok) {
+                let errorText = await response.text();
+                let errorMessage;
+                try {
+                    errorMessage = JSON.parse(errorText).message;
+                } catch {
+                    errorMessage = errorText;
+                }
+                throw new Error(errorMessage || 'Ошибка при выполнении запроса');
+            }
+
+            return response;
+        } catch (error) {
+            console.error('Ошибка при выполнении запроса:', error);
+            throw error;
+        }
+    }
+
     async registerUser(userData) {
         try {
             const response = await fetch(`${this.baseUrl}/api/users`, {
@@ -79,4 +137,7 @@ class ApiClient {
             throw error;
         }
     }
-} 
+}
+
+// Создаем экземпляр ApiClient с базовым URL
+const apiClient = new ApiClient('https://localhost:7274'); 
