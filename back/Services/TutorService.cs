@@ -77,20 +77,23 @@ namespace tutorfinder.Services
         {
             var tutor = _mapper.Map<Tutor>(createTutorDto);
 
+            // Сначала сохраняем репетитора в базу
+            _context.Tutors.Add(tutor);
+            await _context.SaveChangesAsync();
+
+            // Теперь, когда у нас есть Id, добавляем связи с предметами
             if (createTutorDto.SubjectIds != null)
             {
                 foreach (var subjectId in createTutorDto.SubjectIds)
                 {
-                    tutor.TutorSubjects.Add(new TutorSubject
-                    {
-                        TutorsId = tutor.Id,
-                        SubjectsId = subjectId
-                    });
+                        tutor.TutorSubjects.Add(new TutorSubject
+                        {
+                            TutorsId = tutor.Id,
+                            SubjectsId = subjectId
+                        });
                 }
+                await _context.SaveChangesAsync();
             }
-
-            _context.Tutors.Add(tutor);
-            await _context.SaveChangesAsync();
 
             return await GetTutorByIdAsync(tutor.Id);
         }

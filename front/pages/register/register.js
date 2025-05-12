@@ -1,247 +1,189 @@
-// Проверяем, что все необходимые классы загружены
-if (typeof ApiClient === 'undefined' || typeof FormValidator === 'undefined') {
-    console.error('Не удалось загрузить необходимые классы');
-} else {
-    const api = new ApiClient('https://localhost:7274');
+document.addEventListener('DOMContentLoaded', function() {
+    const apiClient = new ApiClient('https://localhost:7274');
+    const form = document.getElementById('registerForm');
+    const phoneInput = document.getElementById('phone');
+    const subjectsSelect = document.getElementById('subjects');
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    const errorAlert = document.getElementById('errorAlert');
+    const errorMessage = document.getElementById('errorMessage');
+    const priceInput = document.getElementById('price');
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const registerForm = document.getElementById('registerForm');
+    // Валидация цены при вводе
+    priceInput.addEventListener('input', function(e) {
+        let value = e.target.value;
         
-        // Создаем индикатор загрузки
-        const loadingSpinner = document.createElement('div');
-        loadingSpinner.className = 'loading-overlay';
-        loadingSpinner.innerHTML = `
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Загрузка...</span>
-            </div>
-            <div class="loading-text mt-2">Подождите, идет обработка...</div>
-        `;
-        document.body.appendChild(loadingSpinner);
-
-        // Создаем контейнер для уведомлений
-        const notificationContainer = document.createElement('div');
-        notificationContainer.className = 'notification-container';
-        document.body.appendChild(notificationContainer);
-
-        // Инициализация маски для телефона
-        const phoneInput = document.getElementById('phone');
-        phoneInput.addEventListener('input', function() {
-            FormValidator.formatPhoneNumber(this);
-        });
-
-        // Загрузка списка предметов
-        loadSubjects();
-
-        if (registerForm) {
-            registerForm.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-                if (!validateForm()) {
-                    return;
-                }
-
-                try {
-                    showLoading('Регистрация пользователя...');
-                    console.log('Начало регистрации пользователя...');
-                    
-                    // Сбор данных формы
-                    const userData = {
-                        firstName: document.getElementById('firstName').value,
-                        lastName: document.getElementById('lastName').value,
-                        email: document.getElementById('email').value,
-                        phone: document.getElementById('phone').value,
-                        password: document.getElementById('password').value,
-                        role: 'Tutor'
-                    };
-
-                    console.log('Отправка данных пользователя:', { ...userData, password: '***' });
-
-                    // Регистрация пользователя
-                    const userResponse = await api.registerUser(userData);
-                    console.log('Пользователь успешно зарегистрирован:', userResponse);
-                    
-                    showLoading('Регистрация репетитора...');
-                    
-                    const tutorData = {
-                        bio: document.getElementById('description').value,
-                        education: document.getElementById('education').value,
-                        yearsOfExperience: parseInt(document.getElementById('experience').value),
-                        hourlyRate: parseFloat(document.getElementById('price').value),
-                        isAvailable: true,
-                        teachingStyle: document.getElementById('availability').value,
-                        subjects: Array.from(document.getElementById('subjects').selectedOptions).map(option => option.value)
-                    };
-
-                    console.log('Отправка данных репетитора:', tutorData);
-
-                    // Регистрация репетитора
-                    tutorData.userId = userResponse.id;
-                    const tutorResponse = await api.registerTutor(tutorData);
-                    console.log('Репетитор успешно зарегистрирован:', tutorResponse);
-
-                    // Сохранение данных пользователя в localStorage
-                    localStorage.setItem('user', JSON.stringify(userResponse));
-                    
-                    showNotification('Регистрация успешно завершена!', 'success');
-                    
-                    // Редирект на страницу профиля через 2 секунды
-                    setTimeout(() => {
-                        window.location.href = '../profile/profile.html';
-                    }, 2000);
-
-                } catch (error) {
-                    console.error('Ошибка при регистрации:', error);
-                    showError(error.message);
-                } finally {
-                    hideLoading();
-                }
-            });
+        // Удаляем все нецифровые символы
+        value = value.replace(/[^\d]/g, '');
+        
+        // Преобразуем в число
+        let numValue = parseInt(value);
+        
+        // Проверяем на NaN
+        if (isNaN(numValue)) {
+            numValue = 0;
         }
-
-        // Валидация полей при вводе
-        const inputs = registerForm.querySelectorAll('input, select, textarea');
-        inputs.forEach(input => {
-            input.addEventListener('input', function() {
-                validateField(this);
-            });
-        });
+        
+        // Ограничиваем значение
+        if (numValue > 10000) {
+            numValue = 10000;
+        }
+        
+        // Обновляем значение поля
+        e.target.value = numValue;
     });
 
+    // Валидация цены при потере фокуса
+    priceInput.addEventListener('blur', function(e) {
+        let value = parseInt(e.target.value);
+        if (isNaN(value) || value < 0) {
+            e.target.value = 0;
+        }
+    });
+
+    // Маска для телефона
+    phoneInput.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 0) {
+            if (!value.startsWith('380')) {
+                value = '380' + value;
+            }
+            e.target.value = '+' + value;
+        }
+    });
+
+    // Загрузка предметов
     async function loadSubjects() {
         try {
-            showLoading('Загрузка списка предметов...');
-            console.log('Загрузка списка предметов...');
-            
-            const subjects = await api.getSubjects();
-            console.log('Предметы загружены:', subjects);
-            
-            const subjectsSelect = document.getElementById('subjects');
-            subjectsSelect.innerHTML = subjects.map(subject => 
-                `<option value="${subject.id}">${subject.name}</option>`
-            ).join('');
-            
-            showNotification('Список предметов загружен', 'info');
+            const subjects = await apiClient.getSubjects();
+            if (subjects && subjects.length > 0) {
+                subjects.forEach(subject => {
+                    const option = document.createElement('option');
+                    option.value = subject.id;
+                    option.textContent = subject.name;
+                    subjectsSelect.appendChild(option);
+                });
+            } else {
+                console.warn('Список предметов пуст');
+                errorMessage.textContent = 'Не вдалося завантажити список предметів. Спробуйте оновити сторінку.';
+                errorAlert.classList.remove('d-none');
+            }
         } catch (error) {
             console.error('Ошибка при загрузке предметов:', error);
-            showError('Не удалось загрузить список предметов');
+            errorMessage.textContent = 'Помилка при завантаженні предметів. Перевірте підключення до сервера.';
+            errorAlert.classList.remove('d-none');
+        }
+    }
+
+    loadSubjects();
+
+    // Обработка отправки формы
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        // Скрываем предыдущие ошибки
+        errorAlert.classList.add('d-none');
+        
+        // Показываем спиннер
+        loadingSpinner.classList.remove('d-none');
+        
+        // Собираем данные формы
+        const formData = {
+            email: document.getElementById('email')?.value || '',
+            password: document.getElementById('password')?.value || '',
+            confirmPassword: document.getElementById('confirmPassword')?.value || '',
+            firstName: document.getElementById('firstName')?.value || '',
+            lastName: document.getElementById('lastName')?.value || '',
+            phone: document.getElementById('phone')?.value || '',
+            role: 'tutor',
+            // Данные репетитора
+            bio: document.getElementById('description')?.value || '',
+            education: document.getElementById('education')?.value || '',
+            yearsOfExperience: parseInt(document.getElementById('experience')?.value || '0'),
+            hourlyRate: parseInt(priceInput.value || '0'),
+            teachingStyle: document.getElementById('availability')?.value || 'online',
+            subjectIds: Array.from(subjectsSelect?.selectedOptions || []).map(option => parseInt(option.value))
+        };
+
+        // Дополнительная валидация цены
+        if (formData.hourlyRate < 0 || formData.hourlyRate > 10000) {
+            errorMessage.textContent = 'Ціна повинна бути від 0 до 10000 грн';
+            errorAlert.classList.remove('d-none');
+            loadingSpinner.classList.add('d-none');
+            return;
+        }
+
+        // Валидация формы
+        const errors = FormValidator.validateForm(formData);
+        if (Object.keys(errors).length > 0) {
+            // Відображаємо всі помилки
+            Object.entries(errors).forEach(([field, message]) => {
+                const element = document.getElementById(
+                    field === 'hourlyRate' ? 'price' :
+                    field === 'yearsOfExperience' ? 'experience' :
+                    field === 'bio' ? 'description' :
+                    field
+                );
+                if (element) {
+                    FormValidator.showError(element, message);
+                }
+            });
+            // Показываем першу помилку
+            const firstError = Object.values(errors)[0];
+            errorMessage.textContent = firstError;
+            errorAlert.classList.remove('d-none');
+            loadingSpinner.classList.add('d-none');
+            return;
+        }
+
+        try {
+            // Подготовка данных для отправки
+            const userData = {
+                email: formData.email,
+                password: formData.password,
+                firstName: formData.firstName,
+                lastName: formData.lastName,
+                phone: formData.phone,
+                role: formData.role
+            };
+
+            const tutorData = {
+                userId: 0, // Будет установлено после создания пользователя
+                bio: formData.bio,
+                education: formData.education,
+                yearsOfExperience: formData.yearsOfExperience,
+                hourlyRate: formData.hourlyRate,
+                teachingStyle: formData.teachingStyle,
+                subjectIds: formData.subjectIds
+            };
+
+            // Логируем данные перед отправкой
+            console.log('Дані для реєстрації користувача:', userData);
+            console.log('Дані для реєстрації репетитора:', tutorData);
+
+            // Регистрация пользователя
+            const user = await apiClient.registerUser(userData);
+            console.log('Відповідь сервера (користувач):', user);
+
+            // Регистрация репетитора
+            tutorData.userId = user.id;
+            const tutor = await apiClient.registerTutor(tutorData);
+            console.log('Відповідь сервера (репетитор):', tutor);
+
+            // Сохраняем данные пользователя
+            localStorage.setItem('user', JSON.stringify(user));
+            localStorage.setItem('tutor', JSON.stringify(tutor));
+
+            // Показываем сообщение об успехе
+            alert('Реєстрація успішна!');
+            
+            // Перенаправляем на главную страницу
+            window.location.href = '../main/index.html';
+        } catch (error) {
+            console.error('Ошибка при регистрации:', error);
+            errorMessage.textContent = error.message || 'Помилка при реєстрації. Спробуйте ще раз.';
+            errorAlert.classList.remove('d-none');
         } finally {
-            hideLoading();
+            loadingSpinner.classList.add('d-none');
         }
-    }
-
-    function validateForm() {
-        let isValid = true;
-        const inputs = document.querySelectorAll('input, select, textarea');
-        
-        inputs.forEach(input => {
-            if (!validateField(input)) {
-                isValid = false;
-            }
-        });
-
-        // Проверка совпадения паролей
-        const password = document.getElementById('password');
-        const confirmPassword = document.getElementById('confirmPassword');
-        if (password.value !== confirmPassword.value) {
-            FormValidator.showError(confirmPassword, 'Пароли не совпадают');
-            isValid = false;
-        }
-
-        return isValid;
-    }
-
-    function validateField(field) {
-        FormValidator.clearError(field);
-        let isValid = true;
-        let errorMessage = '';
-
-        switch (field.id) {
-            case 'email':
-                if (!FormValidator.validateEmail(field.value)) {
-                    errorMessage = 'Введите корректный email адрес';
-                    isValid = false;
-                }
-                break;
-            case 'password':
-                if (!FormValidator.validatePassword(field.value)) {
-                    errorMessage = 'Пароль должен содержать минимум 8 символов, включая буквы и цифры';
-                    isValid = false;
-                }
-                break;
-            case 'phone':
-                if (!FormValidator.validatePhone(field.value)) {
-                    errorMessage = 'Введите корректный номер телефона';
-                    isValid = false;
-                }
-                break;
-            case 'price':
-                if (!FormValidator.validatePrice(field.value)) {
-                    errorMessage = 'Цена должна быть от 1 до 10000 грн';
-                    isValid = false;
-                }
-                break;
-            default:
-                if (field.required && !FormValidator.validateRequired(field.value)) {
-                    errorMessage = 'Это поле обязательно для заполнения';
-                    isValid = false;
-                }
-        }
-
-        if (!isValid) {
-            FormValidator.showError(field, errorMessage);
-        }
-
-        return isValid;
-    }
-
-    function showLoading(message = 'Загрузка...') {
-        const spinner = document.querySelector('.loading-overlay');
-        const loadingText = spinner.querySelector('.loading-text');
-        loadingText.textContent = message;
-        spinner.style.display = 'flex';
-        document.querySelector('button[type="submit"]').disabled = true;
-    }
-
-    function hideLoading() {
-        const spinner = document.querySelector('.loading-overlay');
-        spinner.style.display = 'none';
-        document.querySelector('button[type="submit"]').disabled = false;
-    }
-
-    function showError(message) {
-        showNotification(message, 'error');
-    }
-
-    function showNotification(message, type = 'info') {
-        const notification = document.createElement('div');
-        notification.className = `notification notification-${type}`;
-        notification.innerHTML = `
-            <div class="notification-content">
-                <i class="fas ${getNotificationIcon(type)}"></i>
-                <span>${message}</span>
-            </div>
-            <button type="button" class="btn-close" onclick="this.parentElement.remove()"></button>
-        `;
-        
-        const container = document.querySelector('.notification-container');
-        container.appendChild(notification);
-        
-        // Автоматически удаляем уведомление через 5 секунд
-        setTimeout(() => {
-            notification.remove();
-        }, 5000);
-    }
-
-    function getNotificationIcon(type) {
-        switch (type) {
-            case 'success':
-                return 'fa-check-circle';
-            case 'error':
-                return 'fa-exclamation-circle';
-            case 'info':
-                return 'fa-info-circle';
-            default:
-                return 'fa-bell';
-        }
-    }
-} 
+    });
+}); 
