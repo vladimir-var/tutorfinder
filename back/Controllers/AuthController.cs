@@ -10,10 +10,12 @@ namespace tutorfinder.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IJwtService _jwtService;
 
-        public AuthController(IUserService userService)
+        public AuthController(IUserService userService, IJwtService jwtService)
         {
             _userService = userService;
+            _jwtService = jwtService;
         }
 
         [HttpPost("login")]
@@ -31,9 +33,9 @@ namespace tutorfinder.Controllers
                 return Unauthorized(new { message = "Невірний email або пароль" });
             }
 
-            // В реальном приложении здесь должна быть генерация JWT токена
+            var token = _jwtService.GenerateToken(user);
             return Ok(new { 
-                token = "dummy-token", // Временное решение
+                token = token,
                 userType = user.Role
             });
         }
