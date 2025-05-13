@@ -3,14 +3,25 @@ class ApiClient {
         this.baseUrl = baseUrl;
     }
 
+    getHeaders() {
+        const headers = {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        };
+
+        const token = localStorage.getItem('token');
+        if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+        }
+
+        return headers;
+    }
+
     async get(endpoint) {
         try {
             const response = await fetch(`${this.baseUrl}${endpoint}`, {
                 method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }
+                headers: this.getHeaders()
             });
 
             if (!response.ok) {
@@ -33,14 +44,36 @@ class ApiClient {
 
     async post(endpoint, data) {
         try {
+            const isString = typeof data === 'string';
             const response = await fetch(`${this.baseUrl}${endpoint}`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                },
-                body: JSON.stringify(data)
+                headers: this.getHeaders(),
+                body: isString ? data : JSON.stringify(data)
+            });
+
+            if (!response.ok) {
+                let errorText = await response.text();
+                let errorMessage;
+                try {
+                    errorMessage = JSON.parse(errorText).message;
+                } catch {
+                    errorMessage = errorText;
+                }
+                throw new Error(errorMessage || 'Ошибка при выполнении запроса');
+            }
+
+            return response;
+        } catch (error) {
+            console.error('Ошибка при выполнении запроса:', error);
+            throw error;
+        }
+    }
+
+    async delete(endpoint) {
+        try {
+            const response = await fetch(`${this.baseUrl}${endpoint}`, {
+                method: 'DELETE',
+                headers: this.getHeaders()
             });
 
             if (!response.ok) {
