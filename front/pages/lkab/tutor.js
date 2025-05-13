@@ -1,4 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        window.location.href = '../login/login.html';
+        return;
+    }
     if (typeof apiClient === 'undefined') {
         console.error('ApiClient не определен. Проверьте подключение файла api.js');
         return;
