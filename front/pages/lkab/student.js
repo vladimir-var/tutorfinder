@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 async function loadUserInfo() {
     try {
-        const response = await ApiClient.get('/api/student/profile');
+        const response = await apiClient.get('/api/Students/profile');
         if (response.ok) {
             const data = await response.json();
             document.getElementById('firstName').value = data.firstName;
@@ -22,7 +22,7 @@ async function loadUserInfo() {
 
 async function loadUserReviews() {
     try {
-        const response = await ApiClient.get('/api/student/reviews');
+        const response = await apiClient.get('/api/Students/reviews');
         if (response.ok) {
             const reviews = await response.json();
             const reviewsList = document.getElementById('reviewsList');

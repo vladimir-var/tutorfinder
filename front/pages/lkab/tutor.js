@@ -1,4 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
+    if (typeof apiClient === 'undefined') {
+        console.error('ApiClient не определен. Проверьте подключение файла api.js');
+        return;
+    }
     loadUserInfo();
     loadCertificates();
     loadReviews();
@@ -7,13 +11,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 async function loadUserInfo() {
     try {
-        const response = await apiClient.get('/api/tutor/profile');
+        const response = await apiClient.get('/api/Tutors/profile');
         if (response.ok) {
             const data = await response.json();
-            document.getElementById('firstName').value = data.firstName;
-            document.getElementById('lastName').value = data.lastName;
-            document.getElementById('email').value = data.email;
-            document.getElementById('phone').value = data.phone;
+            document.getElementById('firstName').value = data.user?.firstName || '';
+            document.getElementById('lastName').value = data.user?.lastName || '';
+            document.getElementById('email').value = data.user?.email || '';
+            document.getElementById('phone').value = data.user?.phone || '';
         } else {
             console.error('Помилка завантаження інформації про користувача');
         }
@@ -24,32 +28,32 @@ async function loadUserInfo() {
 
 async function loadCertificates() {
     try {
-        const response = await apiClient.get('/api/tutor/certificates');
+        const response = await apiClient.get('/api/Tutors/certificates');
         if (response.ok) {
-            const certificates = await response.json();
+            const certificatesText = await response.text();
             const certificatesList = document.getElementById('certificatesList');
             certificatesList.innerHTML = '';
+
+            const certificates = certificatesText
+                .split('\n')
+                .map(c => c.trim())
+                .filter(c => c.length > 0 && c.replace(/"/g, '').trim().length > 0);
 
             if (certificates.length === 0) {
                 certificatesList.innerHTML = '<div class="text-center text-muted">У вас ще немає сертифікатів</div>';
                 return;
             }
 
-            certificates.forEach(certificate => {
+            certificates.forEach((certificate, index) => {
                 const certificateElement = document.createElement('div');
                 certificateElement.className = 'list-group-item';
                 certificateElement.innerHTML = `
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="mb-1">${certificate.name}</h6>
-                            <p class="mb-1 text-muted">${certificate.organization}</p>
-                            <small class="text-muted">Отримано: ${new Date(certificate.date).toLocaleDateString()}</small>
+                            <p class="mb-1">${certificate}</p>
                         </div>
                         <div>
-                            <a href="${certificate.fileUrl}" class="btn btn-sm btn-outline-primary me-2" target="_blank">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                            <button class="btn btn-sm btn-outline-danger" onclick="deleteCertificate(${certificate.id})">
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteCertificate(${index})">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
@@ -67,7 +71,7 @@ async function loadCertificates() {
 
 async function loadReviews() {
     try {
-        const response = await apiClient.get('/api/tutor/reviews');
+        const response = await apiClient.get('/api/Tutors/reviews');
         if (response.ok) {
             const reviews = await response.json();
             const reviewsList = document.getElementById('reviewsList');
@@ -110,14 +114,11 @@ function setupCertificateForm() {
             return;
         }
 
-        const formData = new FormData();
-        formData.append('name', document.getElementById('certificateName').value);
-        formData.append('organization', document.getElementById('certificateOrganization').value);
-        formData.append('date', document.getElementById('certificateDate').value);
-        formData.append('file', document.getElementById('certificateFile').files[0]);
+        const name = document.getElementById('certificateName').value;
+        const certificate = { name };
 
         try {
-            const response = await apiClient.post('/api/tutor/certificates', formData);
+            const response = await apiClient.post('/api/Tutors/certificates', certificate);
             if (response.ok) {
                 const modal = bootstrap.Modal.getInstance(document.getElementById('addCertificateModal'));
                 modal.hide();
@@ -132,13 +133,13 @@ function setupCertificateForm() {
     });
 }
 
-async function deleteCertificate(certificateId) {
+async function deleteCertificate(index) {
     if (!confirm('Ви впевнені, що хочете видалити цей сертифікат?')) {
         return;
     }
 
     try {
-        const response = await apiClient.delete(`/api/tutor/certificates/${certificateId}`);
+        const response = await apiClient.delete(`/api/Tutors/certificates/${index}`);
         if (response.ok) {
             loadCertificates();
         } else {

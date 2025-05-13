@@ -1,18 +1,33 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using tutorfinder.DTOs;
 using tutorfinder.Services;
+using System.Security.Claims;
 
 namespace tutorfinder.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class TutorsController : ControllerBase
     {
         private readonly ITutorService _tutorService;
+        private readonly IReviewService _reviewService;
 
-        public TutorsController(ITutorService tutorService)
+        public TutorsController(ITutorService tutorService, IReviewService reviewService)
         {
             _tutorService = tutorService;
+            _reviewService = reviewService;
+        }
+
+        private int GetCurrentUserId()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                throw new UnauthorizedAccessException("User ID not found in token");
+            }
+            return int.Parse(userIdClaim.Value);
         }
 
         // GET: api/Tutors
@@ -110,6 +125,99 @@ namespace tutorfinder.Controllers
 
             await _tutorService.DeleteTutorAsync(id);
             return NoContent();
+        }
+
+        // GET: api/Tutors/profile
+        [HttpGet("profile")]
+        public async Task<ActionResult<TutorDto>> GetTutorProfile()
+        {
+            var userId = GetCurrentUserId();
+            var tutor = await _tutorService.GetTutorByUserIdAsync(userId);
+            if (tutor == null)
+            {
+                return NotFound();
+            }
+            return Ok(tutor);
+        }
+
+        // GET: api/Tutors/certificates
+        [HttpGet("certificates")]
+        public async Task<ActionResult<string>> GetTutorCertificates()
+        {
+            var userId = GetCurrentUserId();
+            var tutor = await _tutorService.GetTutorByUserIdAsync(userId);
+            if (tutor == null)
+            {
+                return NotFound();
+            }
+            return Ok(tutor.Certifications);
+        }
+
+        // POST: api/Tutors/certificates
+        [HttpPost("certificates")]
+        public async Task<ActionResult<string>> AddCertificate([FromBody] CertificateNameDto dto)
+        {
+            var userId = GetCurrentUserId();
+            var tutor = await _tutorService.GetTutorByUserIdAsync(userId);
+            if (tutor == null)
+            {
+                return NotFound();
+            }
+
+            string newCerts;
+            if (string.IsNullOrWhiteSpace(tutor.Certifications))
+                newCerts = dto.Name;
+            else
+                newCerts = tutor.Certifications + "\n" + dto.Name;
+
+            var updateDto = new UpdateTutorDto
+            {
+                Certifications = newCerts
+            };
+
+            var updatedTutor = await _tutorService.UpdateTutorAsync(tutor.Id, updateDto);
+            return Ok(updatedTutor.Certifications);
+        }
+
+        // DELETE: api/Tutors/certificates/{id}
+        [HttpDelete("certificates/{id}")]
+        public async Task<IActionResult> DeleteCertificate(int id)
+        {
+            var userId = GetCurrentUserId();
+            var tutor = await _tutorService.GetTutorByUserIdAsync(userId);
+            if (tutor == null)
+            {
+                return NotFound();
+            }
+
+            var certificates = tutor.Certifications?.Split('\n').ToList() ?? new List<string>();
+            if (id >= 0 && id < certificates.Count)
+            {
+                certificates.RemoveAt(id);
+                var updateDto = new UpdateTutorDto
+                {
+                    Certifications = string.Join("\n", certificates)
+                };
+
+                await _tutorService.UpdateTutorAsync(tutor.Id, updateDto);
+                return NoContent();
+            }
+
+            return NotFound();
+        }
+
+        // GET: api/Tutors/reviews
+        [HttpGet("reviews")]
+        public async Task<ActionResult<IEnumerable<ReviewDto>>> GetTutorReviews()
+        {
+            var userId = GetCurrentUserId();
+            var tutor = await _tutorService.GetTutorByUserIdAsync(userId);
+            if (tutor == null)
+            {
+                return NotFound();
+            }
+            var reviews = await _reviewService.GetReviewsByTutorIdAsync(tutor.Id);
+            return Ok(reviews);
         }
     }
 } 
