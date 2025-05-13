@@ -9,6 +9,7 @@ namespace tutorfinder.Services
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private const int PageSize = 10;
 
         public TutorService(ApplicationDbContext context, IMapper mapper)
         {
@@ -146,6 +147,90 @@ namespace tutorfinder.Services
         public async Task<bool> TutorExistsByUserIdAsync(int userId)
         {
             return await _context.Tutors.AnyAsync(e => e.UserId == userId);
+        }
+
+        public async Task<IEnumerable<TutorDto>> SearchTutorsAdvancedAsync(
+            string? term,
+            int? subjectId,
+            int? minExperience,
+            decimal? minPrice,
+            decimal? maxPrice,
+            int? rating,
+            string? place,
+            string? sortBy = null,
+            bool sortDesc = false,
+            int page = 1)
+        {
+            var query = _context.Tutors
+                .Include(t => t.User)
+                .Include(t => t.TutorSubjects)
+                    .ThenInclude(ts => ts.Subject)
+                .AsQueryable();
+
+            // Фільтр по текстовому пошуку
+            if (!string.IsNullOrWhiteSpace(term))
+            {
+                query = query.Where(t =>
+                    t.User.FirstName.Contains(term) ||
+                    t.User.LastName.Contains(term) ||
+                    t.Bio.Contains(term) ||
+                    t.Education.Contains(term) ||
+                    t.TeachingStyle.Contains(term));
+            }
+
+            // Фільтр по предмету
+            if (subjectId.HasValue)
+            {
+                query = query.Where(t => t.TutorSubjects.Any(ts => ts.SubjectsId == subjectId.Value));
+            }
+
+            // Фільтр по досвіду
+            if (minExperience.HasValue)
+            {
+                query = query.Where(t => t.YearsOfExperience >= minExperience.Value);
+            }
+
+            // Фільтр по ціні
+            if (minPrice.HasValue)
+            {
+                query = query.Where(t => t.HourlyRate >= minPrice.Value);
+            }
+            if (maxPrice.HasValue)
+            {
+                query = query.Where(t => t.HourlyRate <= maxPrice.Value);
+            }
+
+            // Фільтр по рейтингу
+            if (rating.HasValue)
+            {
+                query = query.Where(t => t.AverageRating >= rating.Value);
+            }
+
+            // Фільтр по місцю проведення
+            if (!string.IsNullOrWhiteSpace(place))
+            {
+                query = query.Where(t => t.TeachingStyle.Contains(place));
+            }
+
+            // Сортування
+            if (!string.IsNullOrWhiteSpace(sortBy))
+            {
+                query = sortBy.ToLower() switch
+                {
+                    "price" => sortDesc ? query.OrderByDescending(t => t.HourlyRate) : query.OrderBy(t => t.HourlyRate),
+                    "rating" => sortDesc ? query.OrderByDescending(t => t.AverageRating) : query.OrderBy(t => t.AverageRating),
+                    "experience" => sortDesc ? query.OrderByDescending(t => t.YearsOfExperience) : query.OrderBy(t => t.YearsOfExperience),
+                    _ => query
+                };
+            }
+
+            // Пагінація
+            var tutors = await query
+                .Skip((page - 1) * PageSize)
+                .Take(PageSize)
+                .ToListAsync();
+
+            return _mapper.Map<IEnumerable<TutorDto>>(tutors);
         }
     }
 } 
