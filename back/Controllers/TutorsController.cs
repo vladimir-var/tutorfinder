@@ -8,7 +8,6 @@ namespace tutorfinder.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
     public class TutorsController : ControllerBase
     {
         private readonly ITutorService _tutorService;
@@ -71,15 +70,31 @@ namespace tutorfinder.Controllers
         }
 
         // GET: api/Tutors/search?term=math
+        [AllowAnonymous]
         [HttpGet("search")]
-        public async Task<ActionResult<IEnumerable<TutorDto>>> SearchTutors([FromQuery] string term)
+        public async Task<ActionResult<IEnumerable<TutorDto>>> SearchTutors(
+            [FromQuery] string? term,
+            [FromQuery] int? subjectId,
+            [FromQuery] int? minExperience,
+            [FromQuery] decimal? minPrice,
+            [FromQuery] decimal? maxPrice,
+            [FromQuery] int? rating,
+            [FromQuery] string? place,
+            [FromQuery] string? sortBy = null,
+            [FromQuery] bool sortDesc = false,
+            [FromQuery] int page = 1)
         {
-            if (string.IsNullOrWhiteSpace(term))
-            {
-                return BadRequest("Поисковый запрос не может быть пустым");
-            }
-
-            var tutors = await _tutorService.SearchTutorsAsync(term);
+            var tutors = await _tutorService.SearchTutorsAdvancedAsync(
+                term,
+                subjectId,
+                minExperience,
+                minPrice,
+                maxPrice,
+                rating,
+                place,
+                sortBy,
+                sortDesc,
+                page);
             return Ok(tutors);
         }
 
@@ -128,6 +143,7 @@ namespace tutorfinder.Controllers
         }
 
         // GET: api/Tutors/profile
+        [Authorize]
         [HttpGet("profile")]
         public async Task<ActionResult<TutorDto>> GetTutorProfile()
         {
@@ -141,6 +157,7 @@ namespace tutorfinder.Controllers
         }
 
         // GET: api/Tutors/certificates
+        [Authorize]
         [HttpGet("certificates")]
         public async Task<ActionResult<string>> GetTutorCertificates()
         {
@@ -154,6 +171,7 @@ namespace tutorfinder.Controllers
         }
 
         // POST: api/Tutors/certificates
+        [Authorize]
         [HttpPost("certificates")]
         public async Task<ActionResult<string>> AddCertificate([FromBody] CertificateNameDto dto)
         {
@@ -180,6 +198,7 @@ namespace tutorfinder.Controllers
         }
 
         // DELETE: api/Tutors/certificates/{id}
+        [Authorize]
         [HttpDelete("certificates/{id}")]
         public async Task<IActionResult> DeleteCertificate(int id)
         {
@@ -207,6 +226,7 @@ namespace tutorfinder.Controllers
         }
 
         // GET: api/Tutors/reviews
+        [Authorize]
         [HttpGet("reviews")]
         public async Task<ActionResult<IEnumerable<ReviewDto>>> GetTutorReviews()
         {

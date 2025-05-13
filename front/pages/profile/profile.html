@@ -40,26 +40,19 @@
             <div class="col-lg-4 mb-4">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body text-center">
-                        <img src="https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg" 
+                        <img id="tutorPhoto" src="https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg" 
                              class="rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;" 
                              alt="Фото профілю">
-                        <h4 class="card-title mb-2">Ольга Петренко</h4>
-                        <p class="text-muted mb-3">Репетитор з математики</p>
-                        <div class="rating mb-3">
+                        <h4 class="card-title mb-2" id="tutorName">Завантаження...</h4>
+                        <p class="text-muted mb-3" id="tutorSubject">Завантаження...</p>
+                        <div class="rating mb-3" id="tutorRating">
                             <i class="fas fa-star text-warning"></i>
-                            <i class="fas fa-star text-warning"></i>
-                            <i class="fas fa-star text-warning"></i>
-                            <i class="fas fa-star text-warning"></i>
-                            <i class="fas fa-star-half-alt text-warning"></i>
-                            <span class="ms-1">4.8</span>
-                            <span class="text-muted ms-2">(128 відгуків)</span>
+                            <span class="ms-1">0.0</span>
+                            <span class="text-muted ms-2">(0 відгуків)</span>
                         </div>
                         <div class="d-grid gap-2">
-                            <button class="btn btn-primary">
-                                <i class="fas fa-calendar-check me-2"></i>Записатися на урок
-                            </button>
-                            <button class="btn btn-outline-primary">
-                                <i class="fas fa-envelope me-2"></i>Написати повідомлення
+                            <button class="btn btn-primary" id="bookLessonBtn">
+                                <i class="fas fa-calendar-check me-2"></i><i class="fas fa-envelope me-2"></i>Записатися на урок
                             </button>
                         </div>
                     </div>
@@ -73,23 +66,19 @@
                         <ul class="list-unstyled">
                             <li class="mb-3">
                                 <i class="fas fa-map-marker-alt text-primary me-2"></i>
-                                <strong>Місцезнаходження:</strong> Київ, Україна
+                                <strong>Місцезнаходження:</strong> <span id="tutorLocation">Завантаження...</span>
                             </li>
                             <li class="mb-3">
                                 <i class="fas fa-graduation-cap text-primary me-2"></i>
-                                <strong>Освіта:</strong> Кандидат наук з математики
+                                <strong>Освіта:</strong> <span id="tutorEducation">Завантаження...</span>
                             </li>
                             <li class="mb-3">
                                 <i class="fas fa-briefcase text-primary me-2"></i>
-                                <strong>Досвід:</strong> 8 років
+                                <strong>Досвід:</strong> <span id="tutorExperience">Завантаження...</span>
                             </li>
                             <li class="mb-3">
                                 <i class="fas fa-dollar-sign text-primary me-2"></i>
-                                <strong>Ціна:</strong> 450 грн/год
-                            </li>
-                            <li class="mb-3">
-                                <i class="fas fa-clock text-primary me-2"></i>
-                                <strong>Доступність:</strong> Онлайн та очно
+                                <strong>Ціна:</strong> <span id="tutorPrice">Завантаження...</span>
                             </li>
                         </ul>
                     </div>
@@ -104,8 +93,7 @@
                         <h5 class="mb-0"><i class="fas fa-user me-2"></i>Про мене</h5>
                     </div>
                     <div class="card-body">
-                        <p>Я професійний репетитор з математики з 8-річним досвідом викладання. Спеціалізуюся на підготовці до ЗНО, допомозі з домашніми завданнями та підвищенні успішності учнів.</p>
-                        <p>Мої учні регулярно отримують високі бали на іспитах та вступають до престижних університетів. Я використовую індивідуальний підхід до кожного учня, адаптуючи методи навчання під їхні потреби.</p>
+                        <p id="tutorAbout">Завантаження...</p>
                     </div>
                 </div>
 
@@ -115,39 +103,8 @@
                         <h5 class="mb-0"><i class="fas fa-book me-2"></i>Предмети</h5>
                     </div>
                     <div class="card-body">
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <div class="subject-item">
-                                    <h6 class="fw-bold">Математика</h6>
-                                    <div class="progress mb-2">
-                                        <div class="progress-bar bg-primary" style="width: 100%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="subject-item">
-                                    <h6 class="fw-bold">Алгебра</h6>
-                                    <div class="progress mb-2">
-                                        <div class="progress-bar bg-primary" style="width: 95%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="subject-item">
-                                    <h6 class="fw-bold">Геометрія</h6>
-                                    <div class="progress mb-2">
-                                        <div class="progress-bar bg-primary" style="width: 90%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="subject-item">
-                                    <h6 class="fw-bold">Тригонометрія</h6>
-                                    <div class="progress mb-2">
-                                        <div class="progress-bar bg-primary" style="width: 85%"></div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="row g-3" id="tutorSubjects">
+                            <!-- Subjects will be loaded dynamically -->
                         </div>
                     </div>
                 </div>
@@ -158,37 +115,10 @@
                         <h5 class="mb-0"><i class="fas fa-star me-2"></i>Відгуки</h5>
                     </div>
                     <div class="card-body">
-                        <div class="review-item mb-4">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <h6 class="mb-0">Анна Коваленко</h6>
-                                <div class="rating">
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="fas fa-star text-warning"></i>
-                                </div>
-                            </div>
-                            <p class="text-muted small mb-2">2 місяці тому</p>
-                            <p>Чудовий репетитор! Завдяки Ользі я змогла підвищити свій рівень з математики та успішно здати ЗНО. Рекомендую всім!</p>
+                        <div id="tutorReviews">
+                            <!-- Reviews will be loaded dynamically -->
                         </div>
-
-                        <div class="review-item mb-4">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <h6 class="mb-0">Максим Шевченко</h6>
-                                <div class="rating">
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="fas fa-star text-warning"></i>
-                                </div>
-                            </div>
-                            <p class="text-muted small mb-2">3 місяці тому</p>
-                            <p>Дуже професійний підхід до навчання. Ольга змогла пояснити складні теми простими словами. Моя успішність з математики значно покращилася.</p>
-                        </div>
-
-                        <button class="btn btn-outline-primary w-100">
+                        <button class="btn btn-outline-primary w-100" id="addReviewBtn">
                             <i class="fas fa-plus me-2"></i>Додати відгук
                         </button>
                     </div>
@@ -240,7 +170,35 @@
         </div>
     </footer>
 
+    <!-- Модальне вікно для запису на урок -->
+    <div class="modal fade" id="lessonModal" tabindex="-1" aria-labelledby="lessonModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="lessonRequestForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="lessonModalLabel">Записатися на урок</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрити"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="lessonMessage" class="form-label">Повідомлення для репетитора</label>
+                            <textarea class="form-control" id="lessonMessage" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="lessonDate" class="form-label">Оберіть дату</label>
+                            <input type="date" class="form-control" id="lessonDate" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Відправити</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../js/api.js"></script>
     <script src="profile.js"></script>
 </body>
 </html>

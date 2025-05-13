@@ -170,6 +170,19 @@ class ApiClient {
             throw error;
         }
     }
+
+    async getTutorProfile(tutorId) {
+        try {
+            const response = await this.get(`/api/tutors/${tutorId}`);
+            if (!response.ok) {
+                throw new Error('Не вдалося отримати профіль репетитора');
+            }
+            return response.json();
+        } catch (error) {
+            console.error('Помилка при отриманні профілю репетитора:', error);
+            throw error;
+        }
+    }
 }
 
 // Создаем экземпляр ApiClient с базовым URL
