@@ -24,10 +24,6 @@ namespace tutorfinder.Models
         [Column("comment")]
         public string? Comment { get; set; }
 
-        [Required]
-        [Column("isverified")]
-        public bool IsVerified { get; set; } = false;
-
         // Навигационные свойства
         public Tutor Tutor { get; set; }
         public User Student { get; set; }

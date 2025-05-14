@@ -55,7 +55,13 @@ namespace tutorfinder.Controllers
         [HttpPost]
         public async Task<ActionResult<ReviewDto>> CreateReview(CreateReviewDto createReviewDto)
         {
-            var review = await _reviewService.CreateReviewAsync(createReviewDto);
+            // Витягуємо studentId з токена
+            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+                return Unauthorized();
+            int studentId = int.Parse(userIdClaim.Value);
+
+            var review = await _reviewService.CreateReviewAsync(createReviewDto, studentId);
             return CreatedAtAction(nameof(GetReview), new { id = review.Id }, review);
         }
 
