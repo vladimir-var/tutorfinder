@@ -35,14 +35,10 @@ namespace tutorfinder.Models
         [Range(0, 10000)]
         public decimal HourlyRate { get; set; }
 
-        [Required]
-        [Column("isavailable")]
-        public bool IsAvailable { get; set; } = true;
-
-        [Column("teachingstyle")]
+        [Column("teachingstyle", TypeName = "text")]
         public string? TeachingStyle { get; set; }
 
-        [Column("certifications")]
+        [Column("certifications", TypeName = "text")]
         public string? Certifications { get; set; }
 
         [Column("averagerating", TypeName = "decimal(3,2)")]

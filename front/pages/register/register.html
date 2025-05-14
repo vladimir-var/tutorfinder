@@ -72,6 +72,19 @@
                                     <input type="tel" class="form-control" id="phone" required
                                            placeholder="+38 (___) ___-__-__">
                                 </div>
+                                <div class="col-12">
+                                    <label for="profileImage" class="form-label">Фото профілю</label>
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-3">
+                                            <img id="imagePreview" src="../../assets/default-avatar.png" alt="Preview" 
+                                                 class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <input type="file" class="form-control" id="profileImage" accept="image/*">
+                                            <div class="form-text">Максимальний розмір файлу: 5MB. Дозволені формати: JPG, PNG, GIF</div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Professional Information -->

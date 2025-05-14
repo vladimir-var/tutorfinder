@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const errorAlert = document.getElementById('errorAlert');
     const errorMessage = document.getElementById('errorMessage');
     const priceInput = document.getElementById('price');
+    const profileImageInput = document.getElementById('profileImage');
+    const imagePreview = document.getElementById('imagePreview');
 
     // Валидация цены при вводе
     priceInput.addEventListener('input', function(e) {
@@ -76,6 +78,45 @@ document.addEventListener('DOMContentLoaded', function() {
 
     loadSubjects();
 
+    // Обробка завантаження фото
+    profileImageInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            // Перевірка розміру файлу (5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                showError('Розмір файлу не повинен перевищувати 5MB');
+                profileImageInput.value = '';
+                return;
+            }
+
+            // Перевірка типу файлу
+            if (!file.type.startsWith('image/')) {
+                showError('Будь ласка, виберіть зображення');
+                profileImageInput.value = '';
+                return;
+            }
+
+            // Створюємо посилання на зображення
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imageUrl = e.target.result;
+                imagePreview.src = imageUrl;
+                // Зберігаємо посилання як атрибут елемента
+                profileImageInput.setAttribute('data-image-url', imageUrl);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Функція для показу помилок
+    function showError(message) {
+        errorMessage.textContent = message;
+        errorAlert.classList.remove('d-none');
+        setTimeout(() => {
+            errorAlert.classList.add('d-none');
+        }, 5000);
+    }
+
     // Обработка отправки формы
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -101,7 +142,8 @@ document.addEventListener('DOMContentLoaded', function() {
             yearsOfExperience: parseInt(document.getElementById('experience')?.value || '0'),
             hourlyRate: parseInt(priceInput.value || '0'),
             teachingStyle: document.getElementById('availability')?.value || 'online',
-            subjectIds: Array.from(subjectsSelect?.selectedOptions || []).map(option => parseInt(option.value))
+            subjectIds: Array.from(subjectsSelect?.selectedOptions || []).map(option => parseInt(option.value)),
+            profileImage: profileImageInput.getAttribute('data-image-url') || null // Використовуємо посилання замість файлу
         };
 
         // Дополнительная валидация цены
@@ -143,7 +185,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 firstName: formData.firstName,
                 lastName: formData.lastName,
                 phone: formData.phone,
-                role: formData.role
+                role: formData.role,
+                profileImage: formData.profileImage
             };
 
             const tutorData = {

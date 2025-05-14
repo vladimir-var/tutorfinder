@@ -17,6 +17,7 @@ namespace tutorfinder.DTOs
         public int TotalReviews { get; set; }
         public UserDto User { get; set; }
         public ICollection<SubjectDto> Subjects { get; set; }
+        public ICollection<ReviewDto> Reviews { get; set; }
     }
 
     public class CreateTutorDto
