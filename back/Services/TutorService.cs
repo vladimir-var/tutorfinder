@@ -33,6 +33,8 @@ namespace tutorfinder.Services
                 .Include(t => t.User)
                 .Include(t => t.TutorSubjects)
                     .ThenInclude(ts => ts.Subject)
+                .Include(t => t.Reviews)
+                    .ThenInclude(r => r.Student)
                 .FirstOrDefaultAsync(t => t.Id == id);
             return _mapper.Map<TutorDto>(tutor);
         }
@@ -43,6 +45,8 @@ namespace tutorfinder.Services
                 .Include(t => t.User)
                 .Include(t => t.TutorSubjects)
                     .ThenInclude(ts => ts.Subject)
+                .Include(t => t.Reviews)
+                    .ThenInclude(r => r.Student)
                 .FirstOrDefaultAsync(t => t.UserId == userId);
             return _mapper.Map<TutorDto>(tutor);
         }

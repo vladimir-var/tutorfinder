@@ -26,6 +26,7 @@ namespace tutorfinder.Services
 
         public async Task<IEnumerable<ReviewDto>> GetReviewsByTutorIdAsync(int tutorId)
         {
+            await RecalculateAllTutorsRatingsAsync();
             var reviews = await _context.Reviews
                 .Include(r => r.Student)
                 .Where(r => r.TutorId == tutorId)
@@ -50,23 +51,44 @@ namespace tutorfinder.Services
             return _mapper.Map<ReviewDto>(review);
         }
 
-        public async Task<ReviewDto> CreateReviewAsync(CreateReviewDto createReviewDto)
+        private void UpdateTutorRatingAndReviewsCount(Tutor tutor)
         {
+            // Підрахунок тільки по реальних відгуках з бази для цього репетитора
+            var allReviews = _context.Reviews.Where(r => r.TutorId == tutor.Id).ToList();
+            tutor.TotalReviews = allReviews.Count;
+            tutor.AverageRating = tutor.TotalReviews > 0 ? (decimal)allReviews.Average(r => r.Rating) : 0;
+        }
+
+        public async Task<ReviewDto> CreateReviewAsync(CreateReviewDto createReviewDto, int studentId)
+        {
+            // Перевірка на дубль
+            if (await HasStudentReviewedTutorAsync(studentId, createReviewDto.TutorId))
+                throw new InvalidOperationException("Ви вже залишали відгук цьому репетитору.");
+
             var review = _mapper.Map<Review>(createReviewDto);
+            review.StudentId = studentId;
             _context.Reviews.Add(review);
 
-            // Обновляем средний рейтинг репетитора
+            // Оновлюємо середній рейтинг репетитора
             var tutor = await _context.Tutors
                 .Include(t => t.Reviews)
                 .FirstOrDefaultAsync(t => t.Id == createReviewDto.TutorId);
 
             if (tutor != null)
             {
-                tutor.TotalReviews++;
-                tutor.AverageRating = (tutor.AverageRating * (tutor.TotalReviews - 1) + createReviewDto.Rating) / tutor.TotalReviews;
+                UpdateTutorRatingAndReviewsCount(tutor);
             }
 
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                // Логування помилки
+                Console.WriteLine($"Помилка при збереженні відгуку: {ex.Message}");
+                throw;
+            }
             return await GetReviewByIdAsync(review.Id);
         }
 
@@ -81,11 +103,11 @@ namespace tutorfinder.Services
             var oldRating = review.Rating;
             _mapper.Map(updateReviewDto, review);
 
-            // Обновляем средний рейтинг репетитора
-            if (updateReviewDto.Rating.HasValue && updateReviewDto.Rating.Value != oldRating)
+            // Оновлюємо середній рейтинг репетитора
+            var tutor = review.Tutor;
+            if (tutor != null)
             {
-                var tutor = review.Tutor;
-                tutor.AverageRating = (tutor.AverageRating * tutor.TotalReviews - oldRating + updateReviewDto.Rating.Value) / tutor.TotalReviews;
+                UpdateTutorRatingAndReviewsCount(tutor);
             }
 
             await _context.SaveChangesAsync();
@@ -100,20 +122,14 @@ namespace tutorfinder.Services
 
             if (review != null)
             {
-                // Обновляем средний рейтинг репетитора
                 var tutor = review.Tutor;
-                tutor.TotalReviews--;
-                if (tutor.TotalReviews > 0)
-                {
-                    tutor.AverageRating = (tutor.AverageRating * (tutor.TotalReviews + 1) - review.Rating) / tutor.TotalReviews;
-                }
-                else
-                {
-                    tutor.AverageRating = 0;
-                }
-
                 _context.Reviews.Remove(review);
                 await _context.SaveChangesAsync();
+                if (tutor != null)
+                {
+                    UpdateTutorRatingAndReviewsCount(tutor);
+                    await _context.SaveChangesAsync();
+                }
             }
         }
 
@@ -125,6 +141,19 @@ namespace tutorfinder.Services
         public async Task<bool> HasStudentReviewedTutorAsync(int studentId, int tutorId)
         {
             return await _context.Reviews.AnyAsync(r => r.StudentId == studentId && r.TutorId == tutorId);
+        }
+
+        // Тимчасовий метод для повного перерахунку всіх рейтингів (використати один раз!)
+        public async Task RecalculateAllTutorsRatingsAsync()
+        {
+            var tutors = await _context.Tutors.ToListAsync();
+            foreach (var tutor in tutors)
+            {
+                var allReviews = _context.Reviews.Where(r => r.TutorId == tutor.Id).ToList();
+                tutor.TotalReviews = allReviews.Count;
+                tutor.AverageRating = tutor.TotalReviews > 0 ? (decimal)allReviews.Average(r => r.Rating) : 0;
+            }
+            await _context.SaveChangesAsync();
         }
     }
 } 

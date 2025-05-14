@@ -124,12 +124,23 @@ class ApiClient {
 
     async registerTutor(tutorData) {
         try {
+            const formData = new FormData();
+            
+            // Додаємо всі поля форми
+            Object.keys(tutorData).forEach(key => {
+                if (key === 'profileImage' && tutorData[key]) {
+                    formData.append('profileImage', tutorData[key]);
+                } else if (key !== 'profileImage') {
+                    formData.append(key, tutorData[key]);
+                }
+            });
+
             const response = await fetch(`${this.baseUrl}/api/tutors`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
-                body: JSON.stringify(tutorData)
+                body: formData
             });
 
             if (!response.ok) {
@@ -174,10 +185,7 @@ class ApiClient {
     async getTutorProfile(tutorId) {
         try {
             const response = await this.get(`/api/tutors/${tutorId}`);
-            if (!response.ok) {
-                throw new Error('Не вдалося отримати профіль репетитора');
-            }
-            return response.json();
+            return await response.json();
         } catch (error) {
             console.error('Помилка при отриманні профілю репетитора:', error);
             throw error;
