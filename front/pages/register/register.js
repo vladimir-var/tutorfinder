@@ -229,4 +229,7 @@ document.addEventListener('DOMContentLoaded', function() {
             loadingSpinner.classList.add('d-none');
         }
     });
+
+    localStorage.clear();
+    sessionStorage.clear();
 }); 

@@ -32,7 +32,7 @@ class ApiClient {
                 } catch {
                     errorMessage = errorText;
                 }
-                throw new Error(errorMessage || 'Ошибка при выполнении запроса');
+                throw new Error(errorMessage || 'Помилка при виконанні запиту');
             }
 
             return response;
@@ -59,7 +59,7 @@ class ApiClient {
                 } catch {
                     errorMessage = errorText;
                 }
-                throw new Error(errorMessage || 'Ошибка при выполнении запроса');
+                throw new Error(errorMessage || 'Помилка при виконанні запиту');
             }
 
             return response;
@@ -84,7 +84,7 @@ class ApiClient {
                 } catch {
                     errorMessage = errorText;
                 }
-                throw new Error(errorMessage || 'Ошибка при выполнении запроса');
+                throw new Error(errorMessage || 'Помилка при виконанні запиту');
             }
 
             return response;
@@ -112,7 +112,7 @@ class ApiClient {
                 } catch {
                     errorMessage = errorText;
                 }
-                throw new Error(errorMessage || 'Ошибка при регистрации пользователя');
+                throw new Error(errorMessage || 'Помилка при реєстрації користувача');
             }
 
             return response.json();
@@ -124,23 +124,13 @@ class ApiClient {
 
     async registerTutor(tutorData) {
         try {
-            const formData = new FormData();
-            
-            // Додаємо всі поля форми
-            Object.keys(tutorData).forEach(key => {
-                if (key === 'profileImage' && tutorData[key]) {
-                    formData.append('profileImage', tutorData[key]);
-                } else if (key !== 'profileImage') {
-                    formData.append(key, tutorData[key]);
-                }
-            });
-
             const response = await fetch(`${this.baseUrl}/api/tutors`, {
                 method: 'POST',
                 headers: {
+                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
-                body: formData
+                body: JSON.stringify(tutorData)
             });
 
             if (!response.ok) {
@@ -151,7 +141,7 @@ class ApiClient {
                 } catch {
                     errorMessage = errorText;
                 }
-                throw new Error(errorMessage || 'Ошибка при регистрации репетитора');
+                throw new Error(errorMessage || 'Помилка при реєстрації репетитора');
             }
 
             return response.json();
@@ -172,7 +162,7 @@ class ApiClient {
 
             if (!response.ok) {
                 const error = await response.json();
-                throw new Error(error.message || 'Ошибка при получении списка предметов');
+                throw new Error(error.message || 'Помилка при отриманні списку предметів');
             }
 
             return response.json();

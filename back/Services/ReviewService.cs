@@ -29,6 +29,7 @@ namespace tutorfinder.Services
             await RecalculateAllTutorsRatingsAsync();
             var reviews = await _context.Reviews
                 .Include(r => r.Student)
+                .Include(r => r.Tutor).ThenInclude(t => t.User)
                 .Where(r => r.TutorId == tutorId)
                 .ToListAsync();
             return _mapper.Map<IEnumerable<ReviewDto>>(reviews);
@@ -38,6 +39,7 @@ namespace tutorfinder.Services
         {
             var reviews = await _context.Reviews
                 .Include(r => r.Student)
+                .Include(r => r.Tutor).ThenInclude(t => t.User)
                 .Where(r => r.StudentId == studentId)
                 .ToListAsync();
             return _mapper.Map<IEnumerable<ReviewDto>>(reviews);

@@ -19,7 +19,8 @@ namespace tutorfinder.Mappings
             // Tutor маппинги
             CreateMap<Tutor, TutorDto>()
                 .ForMember(dest => dest.Subjects, opt => opt.MapFrom(src => src.TutorSubjects.Select(ts => ts.Subject)))
-                .ForMember(dest => dest.Reviews, opt => opt.MapFrom(src => src.Reviews));
+                .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.User))
+                .ForMember(dest => dest.Reviews, opt => opt.Ignore());
             CreateMap<CreateTutorDto, Tutor>();
             CreateMap<UpdateTutorDto, Tutor>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
@@ -31,7 +32,8 @@ namespace tutorfinder.Mappings
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // Review маппинги
-            CreateMap<Review, ReviewDto>();
+            CreateMap<Review, ReviewDto>()
+                .ForMember(dest => dest.Tutor, opt => opt.MapFrom(src => src.Tutor));
             CreateMap<CreateReviewDto, Review>()
                 .ForMember(dest => dest.StudentId, opt => opt.Ignore());
             CreateMap<UpdateReviewDto, Review>()

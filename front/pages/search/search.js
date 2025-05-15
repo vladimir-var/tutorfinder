@@ -89,12 +89,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const detailsBtn = userRole === 'student'
                 ? `<a href="../profile/profile.html?id=${tutor.id}" class="btn btn-outline-primary">Детальніше</a>`
                 : `<button class="btn btn-outline-primary" disabled title="Доступно лише для учнів">Детальніше</button>`;
+            const avatar = tutor.user?.profileImage ? tutor.user.profileImage : '../../assets/default-avatar.png';
             tutorResults.innerHTML += `
                 <div class="card tutor-card mb-4">
                     <div class="card-body">
                         <div class="d-flex align-items-center mb-3">
                             <div class="flex-shrink-0">
-                                <img src="https://randomuser.me/api/portraits/men/1.jpg" class="rounded-circle" width="60" height="60" alt="Avatar">
+                                <img src="${avatar}" class="rounded-circle" width="60" height="60" alt="Avatar">
                             </div>
                             <div class="flex-grow-1 ms-3">
                                 <h5 class="fw-bold mb-1">${tutor.user?.firstName || ''} ${tutor.user?.lastName || ''}</h5>
@@ -152,5 +153,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // 6. Початкове завантаження
     loadSubjects();
     searchTutors();
+
+    // Приховати пункт 'Стати Репетитором' для учня
+    const becomeTutorNav = document.getElementById('becomeTutorNav');
+    if (becomeTutorNav && getUserRoleFromToken() === 'student') {
+        becomeTutorNav.style.display = 'none';
+    }
 });
 

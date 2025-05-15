@@ -5,7 +5,6 @@ namespace tutorfinder.Services
     public interface ISubjectService
     {
         Task<IEnumerable<SubjectDto>> GetAllSubjectsAsync();
-        Task<IEnumerable<SubjectDto>> GetSubjectsByCategoryAsync(string category);
         Task<SubjectDto> GetSubjectByIdAsync(int id);
         Task<SubjectDto> CreateSubjectAsync(CreateSubjectDto createSubjectDto);
         Task<SubjectDto> UpdateSubjectAsync(int id, UpdateSubjectDto updateSubjectDto);

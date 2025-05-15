@@ -11,6 +11,7 @@ namespace tutorfinder.DTOs
         public string? Comment { get; set; }
         public bool IsVerified { get; set; }
         public UserDto Student { get; set; }
+        public TutorDto Tutor { get; set; }
     }
 
     public class CreateReviewDto

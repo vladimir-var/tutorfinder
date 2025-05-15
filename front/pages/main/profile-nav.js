@@ -34,4 +34,11 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         profileNav.style.display = 'none';
     }
+
+    // Ховаємо пункт меню 'Стати Репетитором' для студентів
+    var becomeTutorLink = document.querySelector('a[href*="register"], a[href*="register.html"]');
+    if (becomeTutorLink && userType === 'student') {
+        var navItem = becomeTutorLink.closest('.nav-item');
+        if (navItem) navItem.style.display = 'none';
+    }
 }); 

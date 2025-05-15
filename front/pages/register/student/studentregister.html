@@ -48,24 +48,37 @@
                             <i class="fas fa-exclamation-circle me-2"></i>
                             <span id="errorMessage"></span>
                         </div>
-                        <form id="registerForm" novalidate>
+                        <form id="registerForm" novalidate autocomplete="off">
                             <h5 class="fw-bold mb-3">Особиста Інформація</h5>
                             <div class="row g-3 mb-4">
                                 <div class="col-md-6">
                                     <label for="firstName" class="form-label">Ім'я</label>
-                                    <input type="text" class="form-control" id="firstName" required placeholder="Введіть ваше ім'я">
+                                    <input type="text" class="form-control" id="firstName" required placeholder="Введіть ваше ім'я" autocomplete="off">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="lastName" class="form-label">Прізвище</label>
-                                    <input type="text" class="form-control" id="lastName" required placeholder="Введіть ваше прізвище">
+                                    <input type="text" class="form-control" id="lastName" required placeholder="Введіть ваше прізвище" autocomplete="off">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="email" class="form-label">Електронна пошта</label>
-                                    <input type="email" class="form-control" id="email" required placeholder="example@email.com">
+                                    <input type="email" class="form-control" id="email" required placeholder="example@email.com" autocomplete="off">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="phone" class="form-label">Телефон</label>
-                                    <input type="tel" class="form-control" id="phone" required placeholder="+38 (___) ___-__-__">
+                                    <input type="tel" class="form-control" id="phone" required placeholder="+38 (___) ___-__-__" autocomplete="off">
+                                </div>
+                                <div class="col-12">
+                                    <label for="profileImage" class="form-label">Фото профілю</label>
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-3">
+                                            <img id="imagePreview" src="../../assets/default-avatar.png" alt="Preview" 
+                                                 class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <input type="file" class="form-control" id="profileImage" accept="image/*" autocomplete="off">
+                                            <div class="form-text">Максимальний розмір файлу: 5MB. Дозволені формати: JPG, PNG, GIF</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <h5 class="fw-bold mb-3">Безпека Облікового Запису</h5>
@@ -73,7 +86,7 @@
                                 <div class="col-md-6">
                                     <label for="password" class="form-label">Пароль</label>
                                     <div class="input-group">
-                                        <input type="password" class="form-control" id="password" required placeholder="Мінімум 8 символів">
+                                        <input type="password" class="form-control" id="password" required placeholder="Мінімум 8 символів" autocomplete="new-password">
                                         <button class="btn btn-outline-secondary" type="button" id="togglePassword">
                                             <i class="fas fa-eye"></i>
                                         </button>
@@ -82,7 +95,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label for="confirmPassword" class="form-label">Підтвердіть пароль</label>
-                                    <input type="password" class="form-control" id="confirmPassword" required placeholder="Повторіть пароль">
+                                    <input type="password" class="form-control" id="confirmPassword" required placeholder="Повторіть пароль" autocomplete="new-password">
                                 </div>
                             </div>
                             <div class="form-check mb-4">
