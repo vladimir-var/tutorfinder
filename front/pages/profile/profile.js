@@ -17,6 +17,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const tutorAbout = document.getElementById('tutorAbout');
     const tutorSubjects = document.getElementById('tutorSubjects');
     const tutorRating = document.getElementById('tutorRating');
+    const tutorPhoto = document.getElementById('tutorPhoto');
+    const tutorPhone = document.getElementById('tutorPhone');
+    const tutorEmail = document.getElementById('tutorEmail');
 
     // DOM элементы для отзывов
     const reviewsContainer = document.getElementById('tutorReviews');
@@ -49,7 +52,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function loadAndRenderProfile() {
         try {
             tutorData = await apiClient.getTutorProfile(tutorId);
-            console.log('Сервер повернув профіль:', tutorData); // Діагностика
+            console.log('tutorData:', tutorData);
+            console.log('tutorData.reviews:', tutorData.reviews);
             // Основная информация
             tutorName.textContent = `${tutorData.user?.firstName || ''} ${tutorData.user?.lastName || ''}`.trim() || 'Не вказано';
             tutorSubject.textContent = `Репетитор з ${tutorData.subjects && tutorData.subjects.length > 0 ? tutorData.subjects.map(s => s.name).join(', ') : 'Не вказано'}`;
@@ -88,8 +92,43 @@ document.addEventListener('DOMContentLoaded', async () => {
                 addReviewBtn.disabled = userReviewExists;
                 addReviewBtn.textContent = userReviewExists ? 'Відгук вже залишено' : 'Додати відгук';
             }
+            // Оновлюємо фото профілю
+            if (tutorData.user.profileImage) {
+                tutorPhoto.src = tutorData.user.profileImage;
+            } else {
+                tutorPhoto.src = '../../assets/default-avatar.png';
+            }
+            // Оновлюємо інші дані
+            tutorPhone.textContent = tutorData.user.phone;
+            tutorEmail.textContent = tutorData.user.email;
+            // Окремо завантажуємо відгуки
+            await loadAndRenderReviews();
         } catch (err) {
             tutorName.textContent = 'Помилка завантаження';
+            reviewsContainer.innerHTML = '<p class="text-danger">Не вдалося завантажити відгуки</p>';
+        }
+    }
+
+    async function loadAndRenderReviews() {
+        try {
+            const response = await apiClient.get(`/api/Reviews/tutor/${tutorId}`);
+            if (response.ok) {
+                const reviews = await response.json();
+                console.log('Завантажені відгуки:', reviews);
+                renderReviews(reviews || []);
+                // Перевіряємо, чи студент вже залишав відгук
+                userReviewExists = false;
+                if (currentUserId) {
+                    userReviewExists = (reviews || []).some(r => r.studentId == currentUserId);
+                }
+                if (addReviewBtn) {
+                    addReviewBtn.disabled = userReviewExists;
+                    addReviewBtn.textContent = userReviewExists ? 'Відгук вже залишено' : 'Додати відгук';
+                }
+            } else {
+                reviewsContainer.innerHTML = '<p class="text-danger">Не вдалося завантажити відгуки</p>';
+            }
+        } catch (err) {
             reviewsContainer.innerHTML = '<p class="text-danger">Не вдалося завантажити відгуки</p>';
         }
     }
@@ -120,7 +159,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         ${generateStars(Number(review.rating))}
                     </div>
                 </div>
-                <p class="text-muted small mb-2">${formatDate(review.date)}</p>
+                <!-- <p class="text-muted small mb-2">${formatDate(review.date)}</p> -->
                 <p>${review.comment || ''}</p>
             </div>
         `).join('');
@@ -222,4 +261,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Первичная загрузка профиля и отзывов
     await loadAndRenderProfile();
+
+    const bookLessonBtn = document.getElementById('bookLessonBtn');
+    const lessonModalEl = document.getElementById('lessonModal');
+    let lessonModal = null;
+    if (lessonModalEl) {
+        lessonModal = new bootstrap.Modal(lessonModalEl);
+    }
+    if (bookLessonBtn && lessonModal) {
+        bookLessonBtn.addEventListener('click', () => {
+            lessonModal.show();
+        });
+    }
 });

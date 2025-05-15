@@ -23,6 +23,19 @@ async function loadUserInfo() {
             document.getElementById('lastName').value = data.user?.lastName || '';
             document.getElementById('email').value = data.user?.email || '';
             document.getElementById('phone').value = data.user?.phone || '';
+            
+            // Завантаження фотографії профілю
+            const profileImage = document.getElementById('profileImage');
+            const userProfileImage = data.user?.profileImage;
+            if (userProfileImage && userProfileImage.startsWith('data:image')) {
+                profileImage.src = userProfileImage;
+                profileImage.style.display = '';
+            } else if (userProfileImage && userProfileImage.length > 100) {
+                profileImage.src = 'data:image/jpeg;base64,' + userProfileImage;
+                profileImage.style.display = '';
+            } else {
+                profileImage.style.display = 'none';
+            }
         } else {
             console.error('Помилка завантаження інформації про користувача');
         }

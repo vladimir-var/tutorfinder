@@ -17,6 +17,12 @@ async function loadUserInfo() {
             document.getElementById('lastName').value = data.lastName;
             document.getElementById('email').value = data.email;
             document.getElementById('phone').value = data.phone;
+            const profileImage = document.getElementById('studentProfileImage');
+            if (data.profileImage) {
+                profileImage.src = data.profileImage;
+            } else {
+                profileImage.src = '../assets/default-avatar.png';
+            }
         } else {
             console.error('Помилка завантаження інформації про користувача');
         }
@@ -39,17 +45,20 @@ async function loadUserReviews() {
             }
 
             reviews.forEach(review => {
+                console.log('Review:', review);
+                const tutor = review.Tutor || review.tutor;
+                const user = tutor && (tutor.User || tutor.user);
+                const tutorName = user ? `${user.firstName} ${user.lastName}` : 'Без імені';
                 const reviewElement = document.createElement('div');
                 reviewElement.className = 'list-group-item';
                 reviewElement.innerHTML = `
                     <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h6 class="mb-0">${review.tutorName}</h6>
+                        <h6 class="mb-0">${tutorName}</h6>
                         <div class="text-warning">
                             ${generateStars(review.rating)}
                         </div>
                     </div>
                     <p class="mb-2">${review.comment}</p>
-                    <small class="text-muted">${new Date(review.date).toLocaleDateString()}</small>
                 `;
                 reviewsList.appendChild(reviewElement);
             });

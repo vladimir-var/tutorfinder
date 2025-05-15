@@ -29,13 +29,16 @@
                         <a class="nav-link active" href="index.html">Головна</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../search/search.html">Знайти Репетитора</a>
+                        <a class="nav-link" href="../search/search.html" id="findTutorNav">Знайти Репетитора</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="../register/register.html">Стати Репетитором</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../login/login.html">
+                        <a class="nav-link" href="../register/student/studentregister.html" id="registerStudentNav">Зареєструватися як учень</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../login/login.html" id="loginNav">
                             <i class="fas fa-sign-in-alt me-1"></i>Вхід
                         </a>
                     </li>
@@ -60,7 +63,7 @@
                 <div class="col-lg-6">
                     <h1 class="display-4 fw-bold mb-4">Навчайтесь у Найкращих Репетиторів Онлайн</h1>
                     <p class="lead mb-4">Зв'яжіться з експертами-репетиторами з різних предметів та покращуйте свій навчальний досвід завдяки персоналізованим індивідуальним заняттям.</p>
-                    <div class="d-flex gap-3">
+                    <div class="d-flex gap-3 flex-wrap">
                         <a href="search/search.html" class="btn btn-light btn-lg px-4">Знайти Репетитора</a>
                         <a href="register.html" class="btn btn-outline-light btn-lg px-4">Викладати з Нами</a>
                     </div>
@@ -80,71 +83,28 @@
                 <h2 class="fw-bold">Чому Обрати TutorConnect</h2>
                 <p class="text-muted">Ми забезпечуємо найкращий навчальний досвід для студентів</p>
             </div>
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="card h-100">
-                        <div class="card-body text-center p-4">
-                            <div class="icon-wrapper bg-primary bg-opacity-10 text-primary rounded-circle p-3 mb-3 mx-auto">
-                                <i class="fas fa-user-tie fa-2x"></i>
-                            </div>
-                            <h5 class="fw-bold">Експертні Репетитори</h5>
-                            <p class="text-muted">Навчайтесь у сертифікованих професіоналів з багаторічним досвідом викладання.</p>
-                        </div>
+            <div class="row justify-content-center g-5">
+                <div class="col-12 col-md-4 d-flex flex-column align-items-center">
+                    <div class="feature-bubble bg-success bg-opacity-10 text-success mb-3">
+                        <i class="fas fa-user-tie"></i>
                     </div>
+                    <h5 class="fw-bold mb-2">Експертні Репетитори</h5>
+                    <p class="text-muted text-center">Навчайтесь у сертифікованих професіоналів з багаторічним досвідом викладання.</p>
                 </div>
-                <div class="col-md-4">
-                    <div class="card h-100">
-                        <div class="card-body text-center p-4">
-                            <div class="icon-wrapper bg-primary bg-opacity-10 text-primary rounded-circle p-3 mb-3 mx-auto">
-                                <i class="fas fa-laptop fa-2x"></i>
-                            </div>
-                            <h5 class="fw-bold">Гнучке Навчання</h5>
-                            <p class="text-muted">Плануйте заняття зручно для вас з можливістю онлайн або офлайн навчання.</p>
-                        </div>
+                <div class="col-12 col-md-4 d-flex flex-column align-items-center">
+                    <div class="feature-bubble bg-dark bg-opacity-10 text-dark mb-3">
+                        <i class="fas fa-laptop"></i>
                     </div>
+                    <h5 class="fw-bold mb-2">Гнучке Навчання</h5>
+                    <p class="text-muted text-center">Плануйте заняття зручно для вас з можливістю онлайн або офлайн навчання.</p>
                 </div>
-                <div class="col-md-4">
-                    <div class="card h-100">
-                        <div class="card-body text-center p-4">
-                            <div class="icon-wrapper bg-primary bg-opacity-10 text-primary rounded-circle p-3 mb-3 mx-auto">
-                                <i class="fas fa-chart-line fa-2x"></i>
-                            </div>
-                            <h5 class="fw-bold">Доведені Результати</h5>
-                            <p class="text-muted">Студенти покращують свої оцінки в середньому на 1.5 бала.</p>
-                        </div>
+                <div class="col-12 col-md-4 d-flex flex-column align-items-center">
+                    <div class="feature-bubble bg-warning bg-opacity-10 text-warning mb-3">
+                        <i class="fas fa-chart-line"></i>
                     </div>
+                    <h5 class="fw-bold mb-2">Доведені Результати</h5>
+                    <p class="text-muted text-center">Студенти покращують свої оцінки в середньому на 1.5 бала.</p>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Featured Tutors Section -->
-    <section class="featured-tutors py-5">
-        <div class="container py-5">
-            <div class="text-center mb-5">
-                <h2 class="fw-bold">Рекомендовані Репетитори</h2>
-                <p class="text-muted">Познайомтеся з нашими найкращими викладачами</p>
-            </div>
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="card h-100 border-0 shadow-sm">
-                        <img src="https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg" class="card-img-top" alt="Mathematics Tutor">
-                        <div class="card-body">
-                            <h5 class="card-title fw-bold">Sarah Johnson</h5>
-                            <p class="text-muted">Mathematics Tutor</p>
-                            <div class="rating mb-3">
-                                <i class="fas fa-star text-warning"></i>
-                                <i class="fas fa-star text-warning"></i>
-                                <i class="fas fa-star text-warning"></i>
-                                <i class="fas fa-star text-warning"></i>
-                                <i class="fas fa-star-half-alt text-warning"></i>
-                                <span class="ms-2">4.5 (28 reviews)</span>
-                            </div>
-                            <a href="profile/profile.html" class="btn btn-primary w-100">View Profile</a>
-                        </div>
-                    </div>
-                </div>
-                <!-- Additional tutor cards would go here -->
             </div>
         </div>
     </section>
@@ -158,35 +118,59 @@
             </div>
             <div class="row g-4">
                 <div class="col-6 col-md-3">
-                    <a href="search/search.html?q=Mathematics" class="card subject-card text-decoration-none text-center p-4 border-0 shadow-sm hover-lift">
-                        <div class="icon-wrapper bg-primary bg-opacity-10 text-primary rounded-circle p-3 mb-3 mx-auto">
-                            <i class="fas fa-square-root-alt fa-2x"></i>
+                    <a href="search/search.html?q=Математика" class="card subject-card text-decoration-none text-center p-4 border-0 shadow-sm hover-lift">
+                        <div class="icon-wrapper bg-success bg-opacity-10 text-success rounded-circle p-3 mb-3 mx-auto">
+                            <i class="fas fa-calculator fa-2x"></i>
                         </div>
                         <h5 class="fw-bold mb-0">Математика</h5>
                     </a>
                 </div>
                 <div class="col-6 col-md-3">
-                    <a href="search/search.html?q=Science" class="card subject-card text-decoration-none text-center p-4 border-0 shadow-sm hover-lift">
-                        <div class="icon-wrapper bg-primary bg-opacity-10 text-primary rounded-circle p-3 mb-3 mx-auto">
+                    <a href="search/search.html?q=Фізика" class="card subject-card text-decoration-none text-center p-4 border-0 shadow-sm hover-lift">
+                        <div class="icon-wrapper bg-info bg-opacity-10 text-info rounded-circle p-3 mb-3 mx-auto">
+                            <i class="fas fa-magnet fa-2x"></i>
+                        </div>
+                        <h5 class="fw-bold mb-0">Фізика</h5>
+                    </a>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a href="search/search.html?q=Хімія" class="card subject-card text-decoration-none text-center p-4 border-0 shadow-sm hover-lift">
+                        <div class="icon-wrapper bg-warning bg-opacity-10 text-warning rounded-circle p-3 mb-3 mx-auto">
                             <i class="fas fa-flask fa-2x"></i>
                         </div>
-                        <h5 class="fw-bold mb-0">Наука</h5>
+                        <h5 class="fw-bold mb-0">Хімія</h5>
                     </a>
                 </div>
                 <div class="col-6 col-md-3">
-                    <a href="search/search.html?q=Programming" class="card subject-card text-decoration-none text-center p-4 border-0 shadow-sm hover-lift">
-                        <div class="icon-wrapper bg-primary bg-opacity-10 text-primary rounded-circle p-3 mb-3 mx-auto">
-                            <i class="fas fa-code fa-2x"></i>
+                    <a href="search/search.html?q=Англійська мова" class="card subject-card text-decoration-none text-center p-4 border-0 shadow-sm hover-lift">
+                        <div class="icon-wrapper bg-purple bg-opacity-50 text-purple rounded-circle p-3 mb-3 mx-auto">
+                            <i class="fas fa-globe fa-2x"></i>
                         </div>
-                        <h5 class="fw-bold mb-0">Програмування</h5>
+                        <h5 class="fw-bold mb-0">Англійська мова</h5>
                     </a>
                 </div>
                 <div class="col-6 col-md-3">
-                    <a href="search/search.html?q=Languages" class="card subject-card text-decoration-none text-center p-4 border-0 shadow-sm hover-lift">
-                        <div class="icon-wrapper bg-primary bg-opacity-10 text-primary rounded-circle p-3 mb-3 mx-auto">
-                            <i class="fas fa-language fa-2x"></i>
+                    <a href="search/search.html?q=Українська мова" class="card subject-card text-decoration-none text-center p-4 border-0 shadow-sm hover-lift">
+                        <div class="icon-wrapper bg-brown bg-opacity-10 text-brown rounded-circle p-3 mb-3 mx-auto">
+                            <i class="fas fa-book fa-2x"></i>
                         </div>
-                        <h5 class="fw-bold mb-0">Мови</h5>
+                        <h5 class="fw-bold mb-0">Українська мова</h5>
+                    </a>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a href="search/search.html?q=Історія України" class="card subject-card text-decoration-none text-center p-4 border-0 shadow-sm hover-lift">
+                        <div class="icon-wrapper bg-danger bg-opacity-10 text-danger rounded-circle p-3 mb-3 mx-auto">
+                            <i class="fas fa-landmark fa-2x"></i>
+                        </div>
+                        <h5 class="fw-bold mb-0">Історія України</h5>
+                    </a>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a href="search/search.html?q=Інформатика" class="card subject-card text-decoration-none text-center p-4 border-0 shadow-sm hover-lift">
+                        <div class="icon-wrapper bg-dark bg-opacity-10 text-dark rounded-circle p-3 mb-3 mx-auto">
+                            <i class="fas fa-laptop-code fa-2x"></i>
+                        </div>
+                        <h5 class="fw-bold mb-0">Інформатика</h5>
                     </a>
                 </div>
             </div>
@@ -194,76 +178,65 @@
     </section>
 
     <!-- Testimonials Section -->
-    <section class="testimonials-section py-5 bg-light">
+    <section class="testimonials-section py-5 bg-gradient-testimonials">
         <div class="container py-5">
             <div class="text-center mb-5">
                 <h2 class="fw-bold">Що Кажуть Наші Студенти</h2>
                 <p class="text-muted">Історії успіху від нашої спільноти</p>
             </div>
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="card border-0 shadow-sm h-100">
-                        <div class="card-body p-4">
-                            <div class="rating mb-3">
-                                <i class="fas fa-star text-warning"></i>
-                                <i class="fas fa-star text-warning"></i>
-                                <i class="fas fa-star text-warning"></i>
-                                <i class="fas fa-star text-warning"></i>
-                                <i class="fas fa-star text-warning"></i>
-                            </div>
-                            <p class="mb-4">"Мої оцінки з математики покращилися з C до A всього за 3 місяці завдяки моєму репетитору з TutorConnect!"</p>
-                            <div class="d-flex align-items-center">
-                                <img src="https://randomuser.me/api/portraits/women/32.jpg" class="rounded-circle me-3" width="50" height="50" alt="Student">
-                                <div>
-                                    <h6 class="mb-0 fw-bold">Емілі Родрігес</h6>
-                                    <small class="text-muted">Школярка</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card border-0 shadow-sm h-100">
-                        <div class="card-body p-4">
-                            <div class="rating mb-3">
-                                <i class="fas fa-star text-warning"></i>
-                                <i class="fas fa-star text-warning"></i>
-                                <i class="fas fa-star text-warning"></i>
-                                <i class="fas fa-star text-warning"></i>
-                                <i class="fas fa-star text-warning"></i>
-                            </div>
-                            <p class="mb-4">"Репетитор з програмування допоміг мені отримати мою першу роботу розробника. Найкраща інвестиція!"</p>
-                            <div class="d-flex align-items-center">
-                                <img src="https://randomuser.me/api/portraits/men/45.jpg" class="rounded-circle me-3" width="50" height="50" alt="Student">
-                                <div>
-                                    <h6 class="mb-0 fw-bold">Джеймс Вілсон</h6>
-                                    <small class="text-muted">Випускник університету</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card border-0 shadow-sm h-100">
-                        <div class="card-body p-4">
-                            <div class="rating mb-3">
+            <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="testimonial-card mx-auto text-center p-4">
+                            <img src="https://randomuser.me/api/portraits/women/44.jpg" class="testimonial-avatar mb-3" alt="Олена Ковальчук">
+                            <h5 class="fw-bold mb-1">Олена Ковальчук</h5>
+                            <div class="rating mb-2">
                                 <i class="fas fa-star text-warning"></i>
                                 <i class="fas fa-star text-warning"></i>
                                 <i class="fas fa-star text-warning"></i>
                                 <i class="fas fa-star text-warning"></i>
                                 <i class="fas fa-star-half-alt text-warning"></i>
                             </div>
-                            <p class="mb-4">"Впевненість моєї доньки в науці значно зросла після роботи з репетитором."</p>
-                            <div class="d-flex align-items-center">
-                                <img src="https://randomuser.me/api/portraits/women/68.jpg" class="rounded-circle me-3" width="50" height="50" alt="Parent">
-                                <div>
-                                    <h6 class="mb-0 fw-bold">Сара Джонсон</h6>
-                                    <small class="text-muted">Батько</small>
-                                </div>
+                            <p class="mb-0">"Мої оцінки з математики покращилися з 7 до 10 балів всього за 2 місяці! Репетитор пояснює дуже доступно."</p>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="testimonial-card mx-auto text-center p-4">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" class="testimonial-avatar mb-3" alt="Артем Шевченко">
+                            <h5 class="fw-bold mb-1">Артем Шевченко</h5>
+                            <div class="rating mb-2">
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
                             </div>
+                            <p class="mb-0">"Завдяки TutorConnect я підготувався до ЗНО з англійської та вступив до омріяного університету!"</p>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="testimonial-card mx-auto text-center p-4">
+                            <img src="https://randomuser.me/api/portraits/women/65.jpg" class="testimonial-avatar mb-3" alt="Марія Іваненко">
+                            <h5 class="fw-bold mb-1">Марія Іваненко</h5>
+                            <div class="rating mb-2">
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                            </div>
+                            <p class="mb-0">"Дуже зручно займатися онлайн! Мій репетитор завжди підтримує та мотивує до навчання."</p>
                         </div>
                     </div>
                 </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Попередній</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Наступний</span>
+                </button>
             </div>
         </div>
     </section>

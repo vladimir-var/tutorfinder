@@ -22,13 +22,6 @@ namespace tutorfinder.Services
             return _mapper.Map<IEnumerable<SubjectDto>>(subjects);
         }
 
-        public async Task<IEnumerable<SubjectDto>> GetSubjectsByCategoryAsync(string category)
-        {
-            var subjects = await _context.Subjects
-                .Where(s => s.Category == category)
-                .ToListAsync();
-            return _mapper.Map<IEnumerable<SubjectDto>>(subjects);
-        }
 
         public async Task<SubjectDto> GetSubjectByIdAsync(int id)
         {
@@ -79,8 +72,7 @@ namespace tutorfinder.Services
             var subjects = await _context.Subjects
                 .Where(s => 
                     s.Name.Contains(searchTerm) ||
-                    s.Description.Contains(searchTerm) ||
-                    s.Category.Contains(searchTerm))
+                    s.Description.Contains(searchTerm))
                 .ToListAsync();
             return _mapper.Map<IEnumerable<SubjectDto>>(subjects);
         }

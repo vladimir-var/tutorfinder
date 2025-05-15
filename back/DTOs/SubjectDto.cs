@@ -7,7 +7,6 @@ namespace tutorfinder.DTOs
         public int Id { get; set; }
         public string Name { get; set; }
         public string? Description { get; set; }
-        public string Category { get; set; }
         public string? Icon { get; set; }
     }
 
@@ -18,9 +17,6 @@ namespace tutorfinder.DTOs
 
         public string? Description { get; set; }
 
-        [Required]
-        public string Category { get; set; }
-
         public string? Icon { get; set; }
     }
 
@@ -28,7 +24,6 @@ namespace tutorfinder.DTOs
     {
         public string? Name { get; set; }
         public string? Description { get; set; }
-        public string? Category { get; set; }
         public string? Icon { get; set; }
     }
 } 

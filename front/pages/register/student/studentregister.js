@@ -5,6 +5,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const loadingSpinner = document.getElementById('loadingSpinner');
     const errorAlert = document.getElementById('errorAlert');
     const errorMessage = document.getElementById('errorMessage');
+    const profileImageInput = document.getElementById('profileImage');
+    const imagePreview = document.getElementById('imagePreview');
+
+    localStorage.clear();
+    sessionStorage.clear();
 
     // Маска для телефона
     phoneInput.addEventListener('input', function(e) {
@@ -28,6 +33,41 @@ document.addEventListener('DOMContentLoaded', function() {
             this.innerHTML = '<i class="fas fa-eye"></i>';
         }
     });
+
+    // Обробка завантаження фото
+    profileImageInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            // Перевірка розміру файлу (5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                showError('Розмір файлу не повинен перевищувати 5MB');
+                profileImageInput.value = '';
+                return;
+            }
+            // Перевірка типу файлу
+            if (!file.type.startsWith('image/')) {
+                showError('Будь ласка, виберіть зображення');
+                profileImageInput.value = '';
+                return;
+            }
+            // Створюємо посилання на зображення
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imageUrl = e.target.result;
+                imagePreview.src = imageUrl;
+                profileImageInput.setAttribute('data-image-url', imageUrl);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    function showError(message) {
+        errorMessage.textContent = message;
+        errorAlert.classList.remove('d-none');
+        setTimeout(() => {
+            errorAlert.classList.add('d-none');
+        }, 5000);
+    }
 
     // Валидация формы
     function validateForm(data) {
@@ -56,7 +96,8 @@ document.addEventListener('DOMContentLoaded', function() {
             lastName: document.getElementById('lastName')?.value || '',
             phone: document.getElementById('phone')?.value || '',
             terms: document.getElementById('terms')?.checked,
-            role: 'student'
+            role: 'student',
+            profileImage: profileImageInput.getAttribute('data-image-url') || null
         };
 
         // Валидация
@@ -76,12 +117,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 firstName: formData.firstName,
                 lastName: formData.lastName,
                 phone: formData.phone,
-                role: formData.role
+                role: formData.role,
+                profileImage: formData.profileImage
             };
             const user = await apiClient.registerUser(userData);
             localStorage.setItem('user', JSON.stringify(user));
-            alert('Реєстрація успішна!');
-            window.location.href = '../../main/index.html';
+            alert('Реєстрація успішна! Тепер увійдіть у свій акаунт.');
+            window.location.href = '../../login/login.html';
         } catch (error) {
             errorMessage.textContent = error.message || 'Помилка при реєстрації. Спробуйте ще раз.';
             errorAlert.classList.remove('d-none');
